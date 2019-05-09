@@ -1,4 +1,4 @@
-package nju.androidchat;
+package nju.androidchat.client;
 
 import org.junit.Test;
 

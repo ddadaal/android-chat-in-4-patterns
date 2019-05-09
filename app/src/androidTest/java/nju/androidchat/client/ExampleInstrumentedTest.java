@@ -1,4 +1,4 @@
-package nju.androidchat;
+package nju.androidchat.client;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("nju.androidchat", appContext.getPackageName());
+        assertEquals("nju.androidchat.client", appContext.getPackageName());
     }
 }
