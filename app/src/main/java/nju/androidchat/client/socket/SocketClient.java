@@ -38,7 +38,9 @@ public class SocketClient implements Closeable {
 
     }
 
-    // 向服务器发送Message
+    /**
+     * 向服务器发送Message
+     */
     @SneakyThrows
     private void writeToServer(Message message) {
         out.writeObject(message);
@@ -46,12 +48,15 @@ public class SocketClient implements Closeable {
 
     // 从服务端读取信息，当没有读取到消息的时候阻塞
     // 直接开个线程循环调用这个方法
-    // 看server.ConnectionHandler
+    // 看server.ConnectionHandler.run
     private @Nullable Message readFromServer() throws IOException, ClassNotFoundException {
         return (Message) in.readObject();
     }
 
-    // 通知服务器关掉连接
+    /**
+     *  通知服务器关掉连接
+     *  不需要等待回复!
+     */
     public void disconnect() {
         writeToServer(new DisconnectMessage());
     }
