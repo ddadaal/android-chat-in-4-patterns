@@ -5,12 +5,5 @@ import lombok.Getter;
 
 public class Shared {
 
-    @Getter
-    public int v;
-
-    public void test() {
-        System.out.println("Shared module called.");
-
-        int i = this.getV();
-    }
+    public static final int SERVER_PORT = 20001;
 }
