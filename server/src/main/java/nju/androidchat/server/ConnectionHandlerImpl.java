@@ -64,7 +64,11 @@ public class ConnectionHandlerImpl implements ConnectionHandler, Runnable, Close
     public void sendToAllOtherClients(Message message) {
         for (ConnectionHandlerImpl connection : ChatServer.connectionMap.values()) {
             if (connection != this) {
-                connection.writeToClient(message);
+                try {
+                    connection.writeToClient(message);
+                } catch (IOException e) {
+                    log(String.format("Send message to %s failed. Cause: %s", connection.username, e.toString()));
+                }
             }
         }
     }
@@ -141,8 +145,7 @@ public class ConnectionHandlerImpl implements ConnectionHandler, Runnable, Close
         }
     }
 
-    @SneakyThrows
-    private void writeToClient(Message message) {
+    private void writeToClient(Message message) throws IOException {
         out.writeObject(message);
     }
 
