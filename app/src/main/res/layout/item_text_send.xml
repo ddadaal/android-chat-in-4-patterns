@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/ll_text_receive"
+    android:id="@+id/ll_text_send"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="5dp">
-
 
     <TextView
         android:id="@+id/item_tv_time"
@@ -17,29 +16,27 @@
         android:textSize="12dp"
         android:visibility="gone" />
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp">
+        android:layout_marginRight="10dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/chat_item_header"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginRight="5dp"
-            android:src="@mipmap/ic_head_default_left" />
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/ic_head_default_right" />
 
         <LinearLayout
             android:id="@+id/chat_item_layout_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
-            android:layout_toRightOf="@id/chat_item_header"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@id/chat_item_header"
             android:gravity="right|center_vertical"
             android:orientation="horizontal">
 
@@ -47,15 +44,12 @@
                 android:id="@+id/chat_item_content_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/message_text_receive"
+                android:background="@drawable/message_text_send"
                 android:text="你好"
                 android:textColor="#333333"
                 android:textSize="14dp" />
 
-
         </LinearLayout>
-
-
     </RelativeLayout>
 
 </LinearLayout>
