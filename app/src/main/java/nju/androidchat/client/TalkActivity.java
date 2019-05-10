@@ -1,5 +1,6 @@
 package nju.androidchat.client;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.view.KeyEvent;
@@ -10,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+
+import java.util.Objects;
 
 
 public class TalkActivity extends AppCompatActivity {
@@ -37,6 +40,8 @@ public class TalkActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        Intent intent = new Intent(TalkActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -51,6 +56,6 @@ public class TalkActivity extends AppCompatActivity {
     //隐藏软键盘
     private boolean hideKeyboard() {
         InputMethodManager mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        return mInputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+        return mInputMethodManager.hideSoftInputFromWindow(Objects.requireNonNull(this.getCurrentFocus()).getWindowToken(), 0);
     }
 }
