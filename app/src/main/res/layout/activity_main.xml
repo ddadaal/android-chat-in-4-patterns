@@ -9,26 +9,35 @@
 
     <include layout="@layout/header_main" />
 
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <include layout="@layout/item_text_receive" />
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_gravity="bottom"
         android:background="#f3f3f3"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:gravity="bottom"
-        android:layout_gravity="bottom"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="#ccc"
             android:paddingLeft="8dp"
             android:paddingTop="6dp"
             android:paddingRight="8dp"
-            android:paddingBottom="6dp"
-            android:background="#ccc">
+            android:paddingBottom="6dp">
 
             <EditText
                 android:id="@+id/et_content"
@@ -44,14 +53,14 @@
         </RelativeLayout>
 
         <!--<com.hrl.chaui.widget.StateButton-->
-            <!--android:id="@+id/btn_send"-->
-            <!--android:layout_width="50dp"-->
-            <!--android:layout_height="30dp"-->
-            <!--android:padding="1dp"-->
-            <!--android:layout_marginRight="10dp"-->
-            <!--android:text="发送"-->
-            <!--android:textSize="13dp"-->
-            <!--android:visibility="gone" />-->
+        <!--android:id="@+id/btn_send"-->
+        <!--android:layout_width="50dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:padding="1dp"-->
+        <!--android:layout_marginRight="10dp"-->
+        <!--android:text="发送"-->
+        <!--android:textSize="13dp"-->
+        <!--android:visibility="gone" />-->
 
 
     </LinearLayout>
