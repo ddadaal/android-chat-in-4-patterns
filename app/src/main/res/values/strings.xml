@@ -13,4 +13,8 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+
+    <string name="connect_title">连接到服务器</string>
+    <string name="ip_hint">服务器IP</string>
+    <string name="username_hint">用户名</string>
 </resources>
