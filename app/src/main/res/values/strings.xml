@@ -17,4 +17,5 @@
     <string name="connect_title">连接到服务器</string>
     <string name="ip_hint">服务器IP</string>
     <string name="username_hint">用户名</string>
+    <string name="link_btn_word">连接</string>
 </resources>

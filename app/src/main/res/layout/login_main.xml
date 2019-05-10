@@ -78,6 +78,7 @@
             android:id="@+id/btn_link"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="连接" />
+            android:textColor="#13b8f5"
+            android:text="@string/link_btn_word" />
     </LinearLayout>
 </LinearLayout>
