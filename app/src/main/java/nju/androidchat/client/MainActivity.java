@@ -9,7 +9,12 @@ import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
+
 import lombok.extern.java.Log;
+
 import java.util.Objects;
 
 @Log
@@ -26,21 +31,20 @@ public class MainActivity extends AppCompatActivity {
 
         btn1.setOnClickListener(v -> {
             // TODO Auto-generated method stub
-            if(link_to_server(editText1.getText().toString(),editText2.getText().toString())) {
+            if (linkToServer(editText1.getText().toString(), editText2.getText().toString())) {
                 Intent intent = new Intent(MainActivity.this, TalkActivity.class);
                 startActivity(intent);
+            } else {
+                Toast.makeText(this, "请输入信息！", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private boolean link_to_server(String ip, String username) {
-        log.info("ip: "+ip);
-        log.info("username: "+username);
-        boolean successful = false;
-        if(!(ip.equals("")||username.equals(""))){
-            successful = true;
-        }
-        return successful;
+    private boolean linkToServer(String ip, String username) {
+        log.info("ip: " + ip);
+        log.info("username: " + username);
+
+        return !(ip.equals("") || username.equals(""));
     }
 
     @Override
@@ -58,7 +62,4 @@ public class MainActivity extends AppCompatActivity {
         return mInputMethodManager.hideSoftInputFromWindow(Objects.requireNonNull(this.getCurrentFocus()).getWindowToken(), 0);
     }
 
-    @Override
-    public void onBackPressed() {
-    }
 }

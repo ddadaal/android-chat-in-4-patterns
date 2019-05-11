@@ -7,4 +7,10 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity">
     <include layout="@layout/login_main"/>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/bottom_coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

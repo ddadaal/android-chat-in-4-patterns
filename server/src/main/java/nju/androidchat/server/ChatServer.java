@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import lombok.extern.java.Log;
 import nju.androidchat.shared.message.ErrorMessage;
@@ -18,7 +19,7 @@ import static nju.androidchat.shared.Shared.SERVER_PORT;
 
 @Log
 public class ChatServer {
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
+    public static void main(String[] args) throws IOException {
         ChatServer server = new ChatServer();
 
         server.startServer();
@@ -26,12 +27,12 @@ public class ChatServer {
     }
 
     // Record all connected clients
-    public static Map<String, ConnectionHandlerImpl> connectionMap = new HashMap<>();
+    public static Map<String, ConnectionHandlerImpl> connectionMap = new ConcurrentHashMap<>();
 
-    public void startServer() throws IOException, ClassNotFoundException {
+    public void startServer() throws IOException {
 
         ServerSocket server = new ServerSocket(SERVER_PORT);
-        log.info("Server started. Awaiting incoming connection.");
+        log.info("[Server] Server started. Awaiting incoming connection.");
         while (true) {
             Socket client = server.accept();
 

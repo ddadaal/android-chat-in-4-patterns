@@ -11,27 +11,4 @@
         android:visibility="gone"
         android:layout_height="20dp"/>
 
-    <RelativeLayout
-        android:id="@+id/common_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#000"
-        app:contentInsetStart="0dp">
-
-        <TextView
-            android:id="@+id/common_toolbar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:ellipsize="end"
-            android:maxLength="10"
-            android:singleLine="true"
-            android:text="聊天室"
-            android:textColor="#fff"
-            android:textSize="18dp" />
-
-
-
-    </RelativeLayout>
-
 </LinearLayout>
