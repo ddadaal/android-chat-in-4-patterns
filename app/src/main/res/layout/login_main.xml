@@ -43,9 +43,9 @@
                     android:background="#00383636"
                     android:gravity="center_vertical"
                     android:hint="@string/ip_hint"
-                    android:inputType="text"
-                    android:maxLength="11"
-                    android:textSize="18sp" />
+                    android:enabled="false"
+                    android:textSize="18sp"
+                    />
             </LinearLayout>
 
             <View
@@ -93,19 +93,4 @@
                 />
         </LinearLayout>
     </LinearLayout>
-    <androidx.appcompat.widget.Toolbar
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ProgressBar
-            android:id="@+id/progress_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:indeterminate="true"
-            android:visibility="gone" />
-
-    </androidx.appcompat.widget.Toolbar>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -70,8 +70,8 @@
                 android:maxLines="1"
                 android:imeOptions="actionSend"
                 android:minHeight="36dp"
-                android:paddingLeft="13dp"
-                android:textSize="13dp" />
+                android:paddingStart="13dp"
+                android:textSize="13sp" />
 
 
         </RelativeLayout>

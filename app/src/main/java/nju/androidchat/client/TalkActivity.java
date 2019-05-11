@@ -13,12 +13,21 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import java.net.Socket;
+import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
+import lombok.extern.java.Log;
+import nju.androidchat.client.socket.MessageListener;
 import nju.androidchat.client.socket.SocketClient;
+import nju.androidchat.shared.message.ClientSendMessage;
+import nju.androidchat.shared.message.Message;
+import nju.androidchat.shared.message.RecallMessage;
+import nju.androidchat.shared.message.ServerSendMessage;
 
-
-public class TalkActivity extends AppCompatActivity {
+@Log
+public class TalkActivity extends AppCompatActivity implements MessageListener {
 
 
     @Override
@@ -36,9 +45,24 @@ public class TalkActivity extends AppCompatActivity {
                     || (event != null && KeyEvent.KEYCODE_ENTER == event.getKeyCode() && KeyEvent.ACTION_DOWN == event.getAction())) {
                 hideKeyboard();
                 //处理事件
+                LocalDateTime now = LocalDateTime.now();
+                UUID uuid = UUID.randomUUID();
+                String message = editText.getText().toString();
+                SocketClient.getClient().writeToServer(new ClientSendMessage(uuid, now, message));
+
+                // 加到UI中
+                addMessageToUi(new ClientMessage(uuid, now, SocketClient.getClient().getUsername(), message));
             }
             return false;
         });
+
+
+        SocketClient.getClient().startListening(this);
+    }
+
+    // 往UI中加一条信息
+    public void addMessageToUi(ClientMessage message) {
+        // 加到UI中
     }
 
     @Override
@@ -63,5 +87,14 @@ public class TalkActivity extends AppCompatActivity {
     private boolean hideKeyboard() {
         InputMethodManager mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         return mInputMethodManager.hideSoftInputFromWindow(Objects.requireNonNull(this.getCurrentFocus()).getWindowToken(), 0);
+    }
+
+    @Override
+    public void onMessageReceived(Message message) {
+        if (message instanceof ServerSendMessage) {
+            addMessageToUi(new ClientMessage((ServerSendMessage) message));
+        } else if (message instanceof RecallMessage) {
+            // 服务器要撤回消息
+        }
     }
 }

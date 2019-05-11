@@ -29,6 +29,9 @@ import java.util.Objects;
 @Log
 public class MainActivity extends AppCompatActivity {
 
+
+    public static final Class<?> CHAT_ACTIVITY = MainActivity.class;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         EditText editText1 = findViewById(R.id.ip_input);
 
         editText1.setText(SocketClient.SERVER_ADDRESS + ":" + Shared.SERVER_PORT);
+
     }
 
     public void onBtnConnectClicked(View view) {
@@ -49,19 +53,18 @@ public class MainActivity extends AppCompatActivity {
 
         if (!(ip.equals("") || username.equals(""))) {
 
-            setLoading(true);
 
             AsyncTask.execute(() -> {
-                if (SocketClient.connect(username)) {
+                String result = SocketClient.connect(username);
+                if (result.equals("SUCCESS")) {
                     handler.post(() -> {
                         Toast.makeText(this, "登录成功！", Toast.LENGTH_SHORT).show();
-                        setLoading(false);
-                        Intent intent = new Intent(MainActivity.this, TalkActivity.class);
+                        Intent intent = new Intent(MainActivity.this, CHAT_ACTIVITY);
                         startActivity(intent);
                     });
                 } else {
                     handler.post(() -> {
-                        Toast.makeText(this, "连接失败！", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "连接失败！原因：" + result, Toast.LENGTH_SHORT).show();
                     });
                 }
             });
@@ -78,13 +81,6 @@ public class MainActivity extends AppCompatActivity {
             return hideKeyboard();
         }
         return super.onTouchEvent(event);
-    }
-
-    public void setLoading(boolean loading) {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ProgressBar progressBar = findViewById(R.id.progress_spinner);
-        progressBar.setVisibility(loading ? View.VISIBLE : View.INVISIBLE);
     }
 
     //隐藏软键盘

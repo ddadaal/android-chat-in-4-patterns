@@ -10,12 +10,11 @@ public class ClientSendMessageHandler implements MessageHandler<ClientSendMessag
     @Override
     public void handle(ClientSendMessage message, ConnectionHandler connectionHandler) {
         String messageContent = message.getMessage();
-        UUID id = UUID.randomUUID();
         connectionHandler.log("Received message: " + messageContent);
 
         // received a message, send it to all clients except sender
         connectionHandler.sendToAllOtherClients(new ServerSendMessage(
-                id,
+                message.getId(),
                 message.getTime(),
                 connectionHandler.getUsername(),
                 messageContent

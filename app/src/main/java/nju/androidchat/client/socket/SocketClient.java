@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -14,6 +15,7 @@ import lombok.extern.java.Log;
 import nju.androidchat.client.MainActivity;
 import nju.androidchat.shared.Shared;
 import nju.androidchat.shared.message.DisconnectMessage;
+import nju.androidchat.shared.message.ErrorMessage;
 import nju.androidchat.shared.message.LoginRequestMessage;
 import nju.androidchat.shared.message.LoginResponseMessage;
 import nju.androidchat.shared.message.Message;
@@ -23,7 +25,6 @@ import nju.androidchat.shared.message.Message;
  */
 @Log
 public class SocketClient implements Closeable, Runnable {
-
 
     private Thread thread;
 
@@ -61,7 +62,7 @@ public class SocketClient implements Closeable, Runnable {
     }
 
     @SneakyThrows
-    public static boolean connect(String username) {
+    public static String connect(String username) {
 
         try {
             if (client != null) {
@@ -80,8 +81,10 @@ public class SocketClient implements Closeable, Runnable {
                 log.info("LoginResponseMessage received. Login successful");
                 if (loginResponseMessage.getLoggedInUsername().equals(username)) {
                     SocketClient.client = client;
-                    return true;
+                    return "SUCCESS";
                 }
+            } else if (message instanceof ErrorMessage) {
+                return ((ErrorMessage) message).getErrorMessage();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,8 +92,9 @@ public class SocketClient implements Closeable, Runnable {
             if (client != null) {
                 client.close();
             }
+            return e.toString();
         }
-        return false;
+        return "";
     }
 
 
@@ -99,17 +103,32 @@ public class SocketClient implements Closeable, Runnable {
         client.disconnect();
     }
 
-    public void startListening() {
+    public void startListening(MessageListener listener) {
         client.thread = new Thread(client);
         client.thread.start();
+        this.messageListener = listener;
     }
 
+    @Override
+    public void run() {
+        try {
+            while (!terminate) {
+                Message message = readFromServer();
+                if (messageListener != null) {
+                    messageListener.onMessageReceived(message);
+                }
+            }
+        } catch (Exception e) {
+            log.severe("[Client] Exception occurred: " + e.toString());
+        }
+
+    }
 
     /**
      * 向服务器发送Message
      */
     @SneakyThrows
-    private void writeToServer(Message message) {
+    public void writeToServer(Message message) {
         out.writeObject(message);
     }
 
@@ -141,18 +160,5 @@ public class SocketClient implements Closeable, Runnable {
         socket.close();
     }
 
-    @Override
-    public void run() {
-        try {
-            while (!terminate) {
-                Message message = readFromServer();
-                if (messageListener != null) {
-                    messageListener.onMessageReceived(message);
-                }
-            }
-        } catch (Exception e) {
-            log.severe("[Client] Exception occurred: " + e.toString());
-        }
 
-    }
 }
