@@ -1,7 +1,5 @@
 package nju.androidchat.server;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -41,8 +39,8 @@ public class ConnectionHandlerImpl implements ConnectionHandler, Runnable, Close
 
     public ConnectionHandlerImpl(Socket socket) throws IOException {
         this.socket = socket;
-        this.in = new ObjectInputStream(socket.getInputStream());
         this.out = new ObjectOutputStream(socket.getOutputStream());
+        this.in = new ObjectInputStream(socket.getInputStream());
 
         // register handlers
         registerHandler(ClientSendMessage.class, new ClientSendMessageHandler());
@@ -83,6 +81,13 @@ public class ConnectionHandlerImpl implements ConnectionHandler, Runnable, Close
         return username;
     }
 
+    @SneakyThrows
+    private Message readMessage() {
+        Message m = (Message) in.readObject();
+        log("Message Received: " + m);
+        return m;
+    }
+
     @Override
     public void run() {
 
@@ -90,7 +95,7 @@ public class ConnectionHandlerImpl implements ConnectionHandler, Runnable, Close
         try {
 
             // wait for LoginRequestMessage first
-            Message message = (Message) in.readObject();
+            Message message = readMessage();
 
             if (message instanceof LoginRequestMessage) {
                 LoginRequestMessage loginRequestMessage = (LoginRequestMessage) message;
@@ -100,6 +105,7 @@ public class ConnectionHandlerImpl implements ConnectionHandler, Runnable, Close
                 // check username conflict
                 if (!ChatServer.connectionMap.containsKey(username)) {
                     // login success
+                    log(String.format("Login of %s from %s successful", username, socket.getRemoteSocketAddress()));
                     out.writeObject(new LoginResponseMessage(username));
                     ChatServer.connectionMap.put(username, this);
                     this.username = username;
@@ -119,7 +125,7 @@ public class ConnectionHandlerImpl implements ConnectionHandler, Runnable, Close
 
             // Logged in. wait for incoming messages and handle
             while (!terminate) {
-                message = (Message) in.readObject();
+                message = readMessage();
 
                 if (message == null) {
                     continue;

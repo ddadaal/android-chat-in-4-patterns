@@ -1,83 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e2e2e2"
-    android:orientation="vertical">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="36dp"
-        android:text="@string/connect_title"
-        android:textColor="#13b8f5"
-        android:textSize="25sp" />
-
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainActivity">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="88dp"
-        android:layout_marginLeft="23dp"
-        android:layout_marginTop="73dp"
-        android:layout_marginRight="23dp"
+        android:layout_height="match_parent"
+        android:background="#e2e2e2"
         android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="36dp"
+            android:text="@string/connect_title"
+            android:textColor="#13b8f5"
+            android:textSize="25sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:layout_height="88dp"
+            android:layout_marginLeft="23dp"
+            android:layout_marginTop="73dp"
+            android:layout_marginRight="23dp"
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/ip_input"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
-                android:background="#00383636"
-                android:gravity="center_vertical"
-                android:hint="@string/ip_hint"
-                android:inputType="text"
-                android:maxLength="11"
-                android:textSize="18sp" />
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/ip_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:background="#00383636"
+                    android:gravity="center_vertical"
+                    android:hint="@string/ip_hint"
+                    android:inputType="text"
+                    android:maxLength="11"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#dedede"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/username_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:hint="@string/username_hint"
+                    android:inputType="text"
+                    android:maxLength="11"
+                    android:textSize="18sp"
+                    android:editable="false"
+                    />
+            </LinearLayout>
+
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#dedede" />
-
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/username_input"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
-                android:background="@null"
-                android:gravity="center_vertical"
-                android:hint="@string/username_hint"
-                android:inputType="text"
-                android:maxLength="11"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/btn_link"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#13b8f5"
-            android:text="@string/link_btn_word" />
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_link"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#13b8f5"
+                android:text="@string/link_btn_word"
+                android:onClick="onBtnConnectClicked"
+                />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+    <androidx.appcompat.widget.Toolbar
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ProgressBar
+            android:id="@+id/progress_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
+    </androidx.appcompat.widget.Toolbar>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -32,11 +32,11 @@ public class ChatServer {
     public void startServer() throws IOException {
 
         ServerSocket server = new ServerSocket(SERVER_PORT);
-        log.info("[Server] Server started. Awaiting incoming connection.");
+        log.info(String.format("[Server] Server started on %s. Awaiting incoming connection.", SERVER_PORT));
         while (true) {
             Socket client = server.accept();
 
-            log.info("Received message from " + client.getRemoteSocketAddress().toString());
+            log.info("Received connection from " + client.getRemoteSocketAddress().toString());
 
             // get first message and see if it is login request
 

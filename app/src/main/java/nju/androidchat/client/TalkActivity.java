@@ -1,6 +1,7 @@
 package nju.androidchat.client;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.view.KeyEvent;
@@ -13,6 +14,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import java.util.Objects;
+
+import nju.androidchat.client.socket.SocketClient;
 
 
 public class TalkActivity extends AppCompatActivity {
@@ -40,6 +43,9 @@ public class TalkActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        AsyncTask.execute(() -> {
+            SocketClient.disconnectCurrent();
+        });
         Intent intent = new Intent(TalkActivity.this, MainActivity.class);
         startActivity(intent);
     }

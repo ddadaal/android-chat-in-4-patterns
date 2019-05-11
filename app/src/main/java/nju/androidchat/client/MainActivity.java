@@ -1,20 +1,29 @@
 package nju.androidchat.client;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
-
+import lombok.SneakyThrows;
 import lombok.extern.java.Log;
+import nju.androidchat.client.socket.SocketClient;
+import nju.androidchat.shared.Shared;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.Objects;
 
 @Log
@@ -23,28 +32,43 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_main);
-        Button btn1 = findViewById(R.id.btn_link);
+        setContentView(R.layout.login_main);
+
+        EditText editText1 = findViewById(R.id.ip_input);
+
+        editText1.setText(SocketClient.SERVER_ADDRESS + ":" + Shared.SERVER_PORT);
+    }
+
+    public void onBtnConnectClicked(View view) {
+        Handler handler = new Handler();
         EditText editText1 = findViewById(R.id.ip_input);
         EditText editText2 = findViewById(R.id.username_input);
 
+        String ip = editText1.getText().toString();
+        String username = editText2.getText().toString();
 
-        btn1.setOnClickListener(v -> {
-            // TODO Auto-generated method stub
-            if (linkToServer(editText1.getText().toString(), editText2.getText().toString())) {
-                Intent intent = new Intent(MainActivity.this, TalkActivity.class);
-                startActivity(intent);
-            } else {
-                Toast.makeText(this, "请输入信息！", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+        if (!(ip.equals("") || username.equals(""))) {
 
-    private boolean linkToServer(String ip, String username) {
-        log.info("ip: " + ip);
-        log.info("username: " + username);
+            setLoading(true);
 
-        return !(ip.equals("") || username.equals(""));
+            AsyncTask.execute(() -> {
+                if (SocketClient.connect(username)) {
+                    handler.post(() -> {
+                        Toast.makeText(this, "登录成功！", Toast.LENGTH_SHORT).show();
+                        setLoading(false);
+                        Intent intent = new Intent(MainActivity.this, TalkActivity.class);
+                        startActivity(intent);
+                    });
+                } else {
+                    handler.post(() -> {
+                        Toast.makeText(this, "连接失败！", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            });
+
+        } else {
+            Toast.makeText(this, "请输入信息！", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -54,6 +78,13 @@ public class MainActivity extends AppCompatActivity {
             return hideKeyboard();
         }
         return super.onTouchEvent(event);
+    }
+
+    public void setLoading(boolean loading) {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ProgressBar progressBar = findViewById(R.id.progress_spinner);
+        progressBar.setVisibility(loading ? View.VISIBLE : View.INVISIBLE);
     }
 
     //隐藏软键盘
