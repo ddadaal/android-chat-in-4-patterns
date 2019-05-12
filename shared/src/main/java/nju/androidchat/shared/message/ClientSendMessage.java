@@ -6,11 +6,13 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 
 /**
  * 客户端到服务器：发送信息
  */
+@ToString
 @AllArgsConstructor
 public class ClientSendMessage extends Message {
 

@@ -10,7 +10,6 @@ public class ClientSendMessageHandler implements MessageHandler<ClientSendMessag
     @Override
     public void handle(ClientSendMessage message, ConnectionHandler connectionHandler) {
         String messageContent = message.getMessage();
-        connectionHandler.log("Received message: " + messageContent);
 
         // received a message, send it to all clients except sender
         connectionHandler.sendToAllOtherClients(new ServerSendMessage(

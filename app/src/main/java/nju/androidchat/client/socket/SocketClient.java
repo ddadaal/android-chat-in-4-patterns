@@ -103,10 +103,9 @@ public class SocketClient implements Closeable, Runnable {
         client.disconnect();
     }
 
-    public void startListening(MessageListener listener) {
+    public void startListening() {
         client.thread = new Thread(client);
         client.thread.start();
-        this.messageListener = listener;
     }
 
     @Override

@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
+import nju.androidchat.client.mvc0.Mvc0TalkActivity;
 import nju.androidchat.client.socket.SocketClient;
 import nju.androidchat.shared.Shared;
 
@@ -30,7 +31,6 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
 
 
-    public static final Class<?> CHAT_ACTIVITY = MainActivity.class;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +59,8 @@ public class MainActivity extends AppCompatActivity {
                 if (result.equals("SUCCESS")) {
                     handler.post(() -> {
                         Toast.makeText(this, "登录成功！", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(MainActivity.this, CHAT_ACTIVITY);
-                        startActivity(intent);
+
+                        Utils.jumpToChat(this);
                     });
                 } else {
                     handler.post(() -> {

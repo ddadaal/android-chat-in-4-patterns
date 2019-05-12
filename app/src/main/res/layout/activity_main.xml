@@ -71,7 +71,9 @@
                 android:imeOptions="actionSend"
                 android:minHeight="36dp"
                 android:paddingStart="13dp"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                
+                />
 
 
         </RelativeLayout>

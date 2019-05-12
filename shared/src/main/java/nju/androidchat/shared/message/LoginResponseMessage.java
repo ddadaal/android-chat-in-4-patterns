@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 服务器到客户端：登录响应
@@ -15,6 +16,7 @@ import lombok.Setter;
  * 然后在这个连接上调用writeToServer，发出LoginRequestMessage信息
  * 然后当SocketClient接受到LoginResponseMessage信息时说明登录成功
  */
+@ToString
 @AllArgsConstructor
 public class LoginResponseMessage extends Message {
     @Getter

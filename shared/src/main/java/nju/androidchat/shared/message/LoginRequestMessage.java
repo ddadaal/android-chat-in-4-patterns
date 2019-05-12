@@ -3,6 +3,7 @@ package nju.androidchat.shared.message;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 客户端到服务器：登录请求
@@ -13,6 +14,7 @@ import lombok.Setter;
  * 然后当SocketClient接受到LoginResponseMessage信息时说明登录成功
  *
  */
+@ToString
 @AllArgsConstructor
 public class LoginRequestMessage extends Message {
     @Getter

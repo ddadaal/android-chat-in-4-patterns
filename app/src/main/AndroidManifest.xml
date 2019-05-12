@@ -22,6 +22,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".TalkActivity" />
-
+        <activity android:name=".mvc0.Mvc0TalkActivity"/>
     </application>
 </manifest>

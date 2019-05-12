@@ -57,7 +57,6 @@ public class TalkActivity extends AppCompatActivity implements MessageListener {
         });
 
 
-        SocketClient.getClient().startListening(this);
     }
 
     // 往UI中加一条信息
