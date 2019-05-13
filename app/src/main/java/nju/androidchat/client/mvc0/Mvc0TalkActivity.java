@@ -1,35 +1,29 @@
 package nju.androidchat.client.mvc0;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 
 import lombok.extern.java.Log;
 import nju.androidchat.client.ClientMessage;
-import nju.androidchat.client.MainActivity;
 import nju.androidchat.client.R;
 import nju.androidchat.client.Utils;
-import nju.androidchat.client.socket.MessageListener;
-import nju.androidchat.client.socket.SocketClient;
-import nju.androidchat.shared.message.ClientSendMessage;
-import nju.androidchat.shared.message.Message;
-import nju.androidchat.shared.message.RecallMessage;
-import nju.androidchat.shared.message.ServerSendMessage;
+import nju.androidchat.client.component.ItemTextReceive;
+import nju.androidchat.client.component.ItemTextSend;
 
 @Log
-public class Mvc0TalkActivity extends AppCompatActivity implements Mvc0TalkModel.MessageListUpdateListener, TextView.OnEditorActionListener {
+public class Mvc0TalkActivity extends AppCompatActivity implements Mvc0TalkModel.MessageListUpdateListener, TextView.OnEditorActionListener
+{
 
     private Mvc0TalkModel model = new Mvc0TalkModel();
     private Mvc0TalkController controller = new Mvc0TalkController(model, this);
@@ -39,8 +33,9 @@ public class Mvc0TalkActivity extends AppCompatActivity implements Mvc0TalkModel
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         // Input事件处理
-        TextView editText = findViewById(R.id.et_content);
+        EditText editText = findViewById(R.id.et_content);
         editText.setOnEditorActionListener(this);
 
         // View向Model注册事件并开始监听
@@ -48,10 +43,28 @@ public class Mvc0TalkActivity extends AppCompatActivity implements Mvc0TalkModel
         model.startListening();
     }
 
-    // 处理Model更新事件，更新UI
+    // 处理Model更新事件，更新UI。注意这是在另外一个线程，所以不能直接操作
+    // 这里的处理事件的方法比较暴力，就是删除到
     @Override
     public void onListUpdate(List<ClientMessage> messages) {
-        log.info("UI Update called");
+        runOnUiThread(() -> {
+            LinearLayout content = findViewById(R.id.chat_content);
+
+            // 删除所有已有的ItemText
+            content.removeAllViews();
+
+            // 增加ItemText
+            for (ClientMessage message: messages) {
+                String text = String.format("%s", message.getSenderUsername());
+                // 如果是自己发的，增加ItemTextSend
+                if (message.getSenderUsername().equals(model.getUsername())) {
+                    content.addView(new ItemTextSend(this, text));
+                } else {
+                    content.addView(new ItemTextReceive(this, text));
+                }
+            }
+        });
+
     }
 
     @Override
@@ -68,25 +81,29 @@ public class Mvc0TalkActivity extends AppCompatActivity implements Mvc0TalkModel
     }
 
     private boolean hideKeyboard() {
-        InputMethodManager mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        return mInputMethodManager.hideSoftInputFromWindow(Objects.requireNonNull(this.getCurrentFocus()).getWindowToken(), 0);
+        return Utils.hideKeyboard(this);
     }
 
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_SEND
-                || actionId == EditorInfo.IME_ACTION_DONE
-                || (event != null && KeyEvent.KEYCODE_ENTER == event.getKeyCode() && KeyEvent.ACTION_DOWN == event.getAction())) {
+        if (Utils.send(actionId, event)) {
             hideKeyboard();
-
             // 异步地让Controller处理事件
-            AsyncTask.execute(() -> {
-                controller.sendInformation(v.getText().toString());
-            });
+            sendText();
         }
         return false;
     }
 
+    private void sendText() {
+        EditText text = findViewById(R.id.et_content);
+        AsyncTask.execute(() -> {
+            controller.sendInformation(text.getText().toString());
+        });
+    }
 
+    public void onBtnSendClicked(View v) {
+        hideKeyboard();
+        sendText();
+    }
 }

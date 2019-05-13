@@ -41,17 +41,19 @@ public class Mvc0TalkModel implements MessageListener {
         if (message instanceof ServerSendMessage) {
             // 接受到其他设备发来的消息
             // 增加到自己的消息列表里，并通知UI修改
+            ServerSendMessage serverSendMessage = (ServerSendMessage) message;
             log.info(String.format("%s sent a message: %s",
-                    ((ServerSendMessage) message).getSenderUsername(),
-                    ((ServerSendMessage) message).getMessage()
+                    serverSendMessage.getSenderUsername(),
+                    serverSendMessage.getMessage()
             ));
-            messageList.add(new ClientMessage((ServerSendMessage) message));
+            messageList.add(new ClientMessage(serverSendMessage));
             if (listener != null) {
                 listener.onListUpdate(messageList);
             }
         } else if (message instanceof ErrorMessage) {
             // 接收到服务器的错误消息
             log.severe("Server error: " + ((ErrorMessage) message).getErrorMessage());
+
         } else if (message instanceof RecallMessage) {
             // 接受到服务器的撤回消息，MVC-0不实现
         } else {

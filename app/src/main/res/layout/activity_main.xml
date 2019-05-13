@@ -11,51 +11,38 @@
 
 
     <LinearLayout
-        android:id="@+id/content"
+        android:id="@+id/chat_content"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <include layout="@layout/item_text_receive" />
-
-        <include layout="@layout/item_text_send" />
-
-        <include layout="@layout/item_text_receive" />
-
-        <include layout="@layout/item_text_send" />
-
-        <include layout="@layout/item_text_receive" />
-
-        <include layout="@layout/item_text_send" />
-
-        <include layout="@layout/item_text_receive" />
-
-        <include layout="@layout/item_text_send" />
-
-        <include layout="@layout/item_text_receive" />
-
-        <include layout="@layout/item_text_send" />
-
-        <include layout="@layout/item_text_receive" />
-
-        <include layout="@layout/item_text_send" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="#f3f3f3"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:gravity="bottom"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="发送"
+                android:onClick="onBtnSendClicked"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
             android:background="#ccc"
             android:paddingLeft="8dp"
             android:paddingTop="6dp"
@@ -67,16 +54,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/message_shap_chat_bg"
-                android:maxLines="1"
                 android:imeOptions="actionSend"
+                android:maxLines="1"
                 android:minHeight="36dp"
                 android:paddingStart="13dp"
                 android:textSize="13sp"
-                
+
                 />
+        </LinearLayout>
 
-
-        </RelativeLayout>
 
         <!--<com.hrl.chaui.widget.StateButton-->
         <!--android:id="@+id/btn_send"-->
