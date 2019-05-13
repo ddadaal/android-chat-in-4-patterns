@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -55,7 +56,7 @@ public class Mvc0TalkActivity extends AppCompatActivity implements Mvc0TalkModel
 
             // 增加ItemText
             for (ClientMessage message: messages) {
-                String text = String.format("%s", message.getSenderUsername());
+                String text = String.format("%s", message.getMessage());
                 // 如果是自己发的，增加ItemTextSend
                 if (message.getSenderUsername().equals(model.getUsername())) {
                     content.addView(new ItemTextSend(this, text));
@@ -63,6 +64,13 @@ public class Mvc0TalkActivity extends AppCompatActivity implements Mvc0TalkModel
                     content.addView(new ItemTextReceive(this, text));
                 }
             }
+
+            // scroll to bottom
+            ScrollView scrollView = findViewById(R.id.content_scroll_view);
+            scrollView.post(() -> {
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            });
+
         });
 
     }
