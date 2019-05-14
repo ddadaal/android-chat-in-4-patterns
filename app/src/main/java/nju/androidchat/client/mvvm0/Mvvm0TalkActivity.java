@@ -54,6 +54,8 @@ public class Mvvm0TalkActivity extends AppCompatActivity implements MessageListe
         // 注册自己
         client.setMessageListener(this);
 
+        client.startListening();
+
 //        // 测试用
 //        initData();
     }
