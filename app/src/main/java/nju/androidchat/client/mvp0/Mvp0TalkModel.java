@@ -18,23 +18,26 @@ import nju.androidchat.shared.message.RecallMessage;
 import nju.androidchat.shared.message.ServerSendMessage;
 
 @Log
-public class Mvp0TalkModel implements MessageListener {
+public class Mvp0TalkModel implements MessageListener, Mvp0Contract.Model {
 
     private SocketClient client;
 
     @Setter
-    private IMvp0TalkPresenter iMvp0TalkPresenter;
+    private Mvp0Contract.Presenter iMvp0TalkPresenter;
 
     public Mvp0TalkModel() {
         this.client = SocketClient.getClient();
         // Model本身去注册Socket的消息接受事件
         client.setMessageListener(this);
+        client.startListening();
     }
 
+    @Override
     public String getUsername() {
         return client.getUsername();
     }
 
+    @Override
     public ClientMessage sendInformation(String message) {
         //处理事件
         LocalDateTime now = LocalDateTime.now();
