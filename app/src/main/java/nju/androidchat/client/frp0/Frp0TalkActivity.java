@@ -3,6 +3,7 @@ package nju.androidchat.client.frp0;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -38,6 +39,9 @@ public class Frp0TalkActivity extends AppCompatActivity {
     private SocketClient socketClient;
     private Observable<ClientSendMessage> sendMessages$ = Observable.empty();
     private Observable<Message> receiveMessage$ = Observable.empty();
+    private Observable<ServerSendMessage> serverSendMessages$ = Observable.empty();
+    private Observable<ErrorMessage> errorMessage$ = Observable.empty();
+    private Observable<RecallMessage> recallMessage$ = Observable.empty();
     private Observable<LinearLayout> addToViewMessages$ = Observable.empty();
 
     Button sendButton;
@@ -60,50 +64,55 @@ public class Frp0TalkActivity extends AppCompatActivity {
         messageList = findViewById(R.id.chat_content);
 
         // 初始流
-        this.receiveMessage$ = this.createReceiveMessageStream();
-        this.sendMessages$ = this.createSendMessageStream();
+        this.receiveMessage$ = this.createReceiveMessageStream().share();
+        this.sendMessages$ = this.createSendMessageStream().share();
+        // 分类过滤
+        this.serverSendMessages$ = this.receiveMessage$
+                .filter(message -> message instanceof ServerSendMessage)
+                .map(message -> (ServerSendMessage) message);
+        this.errorMessage$ = this.receiveMessage$
+                .filter(message -> message instanceof ErrorMessage)
+                .map(message -> (ErrorMessage) message);
+        this.recallMessage$ = this.receiveMessage$
+                .filter(message -> message instanceof RecallMessage)
+                .map(message -> (RecallMessage) message);
+
+        // 更新列表的流
+        this.addToViewMessages$ = this.createMessageListItemStream(this.serverSendMessages$.share(), this.sendMessages$.share());
+
 
 
         // 订阅流
         this.sendMessages$
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(message -> {
-                    editText.setText("");
-                    messageList.addView(new ItemTextSend(this, message.getMessage()));
-                })
                 .observeOn(Schedulers.io()) // 发送消息网络要在 io线程做
-                .subscribe(clientSendMessage -> {
-                    Log.d("send", clientSendMessage.toString());
-                    this.socketClient.writeToServer(clientSendMessage);
-                }, Throwable::printStackTrace);
+                .subscribe(this::onSendMessage, Throwable::printStackTrace);
 
-        this.receiveMessage$
+        this.errorMessage$
                 .observeOn(AndroidSchedulers.mainThread())
-                .filter(message -> message instanceof ServerSendMessage)
-                .subscribe(message -> {
-                    Log.d("receive", message.toString());
-                    if (message instanceof ServerSendMessage) {
-                        // 接受到其他设备发来的消息
-                        // 增加到自己的消息列表里，并通知UI修改
-                        ServerSendMessage serverSendMessage = (ServerSendMessage) message;
-                        log.info(String.format("%s sent a message: %s",
-                                serverSendMessage.getSenderUsername(),
-                                serverSendMessage.getMessage()
-                        ));
-                        messageList.addView(new ItemTextReceive(this, ((ServerSendMessage)message).getMessage()));
-                    } else if (message instanceof ErrorMessage) {
-                        // 接收到服务器的错误消息
-                        log.severe("Server error: " + ((ErrorMessage) message).getErrorMessage());
-                    } else if (message instanceof RecallMessage) {
-                        // 接受到服务器的撤回消息，FRP-0不实现
-                    } else {
-                        // 不认识的消息
-                        log.severe("Unsupported message received: " + message.toString());
-                    }
+                .subscribe(this::onErrorMessage, Throwable::printStackTrace);
 
-                }, Throwable::printStackTrace);
+        this.addToViewMessages$
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::onAddViewToMessageList, Throwable::printStackTrace);
 
     }
+
+
+    /* ============== 订阅处理函数 ============ */
+    private void onAddViewToMessageList(View view) {
+        log.info(view.toString());
+        messageList.addView(view);
+    }
+    private void onErrorMessage(ErrorMessage message) {
+        Toast.makeText(this, message.getErrorMessage(), Toast.LENGTH_LONG).show();
+    }
+    private void onSendMessage(ClientSendMessage message) {
+        Log.d("send", message.toString());
+        this.socketClient.writeToServer(message);
+    }
+
+
+    /* ========= 创建流函数 ========= */
 
     /**
      * 发送出去的消息流
@@ -111,7 +120,7 @@ public class Frp0TalkActivity extends AppCompatActivity {
     @SuppressLint("CheckResult")
     private Observable<ClientSendMessage> createSendMessageStream() {
         // 发送按钮事件
-        Observable<Unit> clicks$ = RxView.clicks(sendButton);
+        Observable<Unit> clicks$ = RxView.clicks(sendButton).share();
 
         return clicks$
                 .observeOn(AndroidSchedulers.mainThread())
@@ -119,6 +128,7 @@ public class Frp0TalkActivity extends AppCompatActivity {
                     UUID uuid = UUID.randomUUID();
                     LocalDateTime now = LocalDateTime.now();
                     String text = editText.getText().toString();
+                    editText.setText("");
                     return new ClientSendMessage(uuid, now, text);
                 });
     }
@@ -143,5 +153,18 @@ public class Frp0TalkActivity extends AppCompatActivity {
                 emitter.onError(e);
             }
         }).subscribeOn(Schedulers.io());    // 上面的接收是网络操作，要在io中做
+    }
+
+    /**
+     * 更新列表的流
+     * @param receive$
+     * @param send$
+     * @return
+     */
+    private Observable<LinearLayout> createMessageListItemStream(Observable<ServerSendMessage> receive$, Observable<ClientSendMessage> send$) {
+        return Observable.merge(
+                receive$.map(message -> new ItemTextReceive(this, message.getMessage())),
+                send$.map(message -> new ItemTextSend(this, message.getMessage()))
+        );
     }
 }
