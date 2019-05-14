@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ScrollView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,15 +12,16 @@ import java.util.Objects;
 
 import lombok.experimental.ExtensionMethod;
 import lombok.experimental.UtilityClass;
+import nju.androidchat.client.frp0.Frp0TalkActivity;
 import nju.androidchat.client.mvc0.Mvc0TalkActivity;
-import nju.androidchat.client.mvvm0.Mvvm0TalkActivity;
+import nju.androidchat.client.mvp0.Mvp0TalkActivity;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 @UtilityClass
 public class Utils {
 
-    public final Class<?> CHAT_ACTIVITY = Mvvm0TalkActivity.class;
+    public final Class<?> CHAT_ACTIVITY = Frp0TalkActivity.class;
 
     public void jumpTo(AppCompatActivity activity, Class<?> clazz) {
         Intent intent = new Intent(activity.getBaseContext(), clazz);
@@ -44,6 +46,13 @@ public class Utils {
         return actionId == EditorInfo.IME_ACTION_SEND
                 || actionId == EditorInfo.IME_ACTION_DONE
                 || (event != null && KeyEvent.KEYCODE_ENTER == event.getKeyCode() && KeyEvent.ACTION_DOWN == event.getAction());
+    }
+
+    public void scrollListToBottom(AppCompatActivity activity) {
+        ScrollView scrollView = activity.findViewById(R.id.content_scroll_view);
+        scrollView.post(() -> {
+            scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+        });
     }
 
 }

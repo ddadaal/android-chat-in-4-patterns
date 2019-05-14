@@ -66,10 +66,7 @@ public class Mvc0TalkActivity extends AppCompatActivity implements Mvc0TalkModel
             }
 
             // scroll to bottom
-            ScrollView scrollView = findViewById(R.id.content_scroll_view);
-            scrollView.post(() -> {
-                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-            });
+            Utils.scrollListToBottom(this);
 
         });
 
