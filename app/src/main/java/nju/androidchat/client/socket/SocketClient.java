@@ -33,6 +33,7 @@ public class SocketClient implements Closeable, Runnable {
 
     private Socket socket;
 
+    @Getter
     private volatile boolean terminate = false;
 
     private @Setter
@@ -136,7 +137,7 @@ public class SocketClient implements Closeable, Runnable {
     // 从服务端读取信息，当没有读取到消息的时候阻塞
     // 直接开个线程循环调用这个方法
     // 看server.ConnectionHandler.run
-    private Message readFromServer() throws IOException {
+    public Message readFromServer() throws IOException {
         return (Message) in.readObject();
     }
 

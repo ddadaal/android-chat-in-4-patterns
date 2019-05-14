@@ -22,5 +22,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".mvc0.Mvc0TalkActivity"/>
+        <activity android:name=".frp0.Frp0TalkActivity"/>
     </application>
 </manifest>

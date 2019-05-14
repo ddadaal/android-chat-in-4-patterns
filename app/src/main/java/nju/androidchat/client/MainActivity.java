@@ -1,30 +1,22 @@
 package nju.androidchat.client;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.os.Handler;
-import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import lombok.SneakyThrows;
 import lombok.extern.java.Log;
-import nju.androidchat.client.mvc0.Mvc0TalkActivity;
+import nju.androidchat.client.frp0.Frp0TalkActivity;
 import nju.androidchat.client.socket.SocketClient;
 import nju.androidchat.shared.Shared;
 
-import java.io.IOException;
-import java.net.Socket;
 import java.util.Objects;
 
 @Log
@@ -60,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
                     handler.post(() -> {
                         Toast.makeText(this, "登录成功！", Toast.LENGTH_SHORT).show();
 
-                        Utils.jumpToChat(this);
+//                        Utils.jumpToChat(this);
+                        Utils.jumpTo(this, Frp0TalkActivity.class);
                     });
                 } else {
                     handler.post(() -> {
