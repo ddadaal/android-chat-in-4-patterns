@@ -21,7 +21,9 @@ android {
         targetCompatibility = '1.8'
 
     }
-
+    dataBinding {
+        enabled = true
+    }
     buildToolsVersion = '28.0.3'
 }
 
