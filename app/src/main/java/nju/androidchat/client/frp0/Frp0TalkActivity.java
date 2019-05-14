@@ -24,6 +24,7 @@ import io.reactivex.schedulers.Schedulers;
 import kotlin.Unit;
 import nju.androidchat.client.ClientMessage;
 import nju.androidchat.client.R;
+import nju.androidchat.client.Utils;
 import nju.androidchat.client.component.ItemTextReceive;
 import nju.androidchat.client.component.ItemTextSend;
 import nju.androidchat.client.socket.SocketClient;
@@ -63,52 +64,59 @@ public class Frp0TalkActivity extends AppCompatActivity {
         editText = findViewById(R.id.et_content);
         messageList = findViewById(R.id.chat_content);
 
-        // 初始流
-        this.receiveMessage$ = this.createReceiveMessageStream().share();
+        // 1. 初始化发送流
         this.sendMessages$ = this.createSendMessageStream().share();
-        // 分类过滤
-        this.serverSendMessages$ = this.receiveMessage$
-                .filter(message -> message instanceof ServerSendMessage)
-                .map(message -> (ServerSendMessage) message);
+
+        // 2. 初始化接受信息流
+        this.receiveMessage$ = this.createReceiveMessageStream().share();
+
+        // 3. 将接受信息流分为多个流，分别处理
+        // 3.1 错误处理流
         this.errorMessage$ = this.receiveMessage$
                 .filter(message -> message instanceof ErrorMessage)
                 .map(message -> (ErrorMessage) message);
+        // 3.2 服务器发送消息流
+        this.serverSendMessages$ = this.receiveMessage$
+                .filter(message -> message instanceof ServerSendMessage)
+                .map(message -> (ServerSendMessage) message);
+        // 3.2 撤回消息流
         this.recallMessage$ = this.receiveMessage$
                 .filter(message -> message instanceof RecallMessage)
                 .map(message -> (RecallMessage) message);
 
-        // 更新列表的流
-        this.addToViewMessages$ = this.createMessageListItemStream(this.serverSendMessages$.share(), this.sendMessages$.share());
 
-
-
-        // 订阅流
-        this.sendMessages$
-                .observeOn(Schedulers.io()) // 发送消息网络要在 io线程做
-                .subscribe(this::onSendMessage, Throwable::printStackTrace);
-
+        // 4. 处理每个流
+        // 4.1 处理错误流
         this.errorMessage$
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onErrorMessage, Throwable::printStackTrace);
+                .subscribe((message) -> {
+                    Toast.makeText(this, message.getErrorMessage(), Toast.LENGTH_LONG).show();
+                }, Throwable::printStackTrace);
+
+
+        // 4.2 处理发送流，将每个消息写到服务器
+        this.sendMessages$
+                .observeOn(Schedulers.io()) // 发送消息网络要在 io线程做
+                .subscribe((message) -> {
+                    Log.d("send", message.toString());
+                    this.socketClient.writeToServer(message);
+                }, Throwable::printStackTrace);
+
+
+        // 4.3 合并发送流和服务器接受消息流，并更新UI
+        this.addToViewMessages$ = Observable.merge(
+                this.serverSendMessages$.share().map(message -> new ItemTextReceive(this, message.getMessage())),
+                this.sendMessages$.map(message -> new ItemTextSend(this, message.getMessage()))
+        );
 
         this.addToViewMessages$
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::onAddViewToMessageList, Throwable::printStackTrace);
+                .subscribe((view) -> {
+                    log.info(view.toString());
+                    messageList.addView(view);
+                    Utils.scrollListToBottom(this);
+                }, Throwable::printStackTrace);
 
-    }
-
-
-    /* ============== 订阅处理函数 ============ */
-    private void onAddViewToMessageList(View view) {
-        log.info(view.toString());
-        messageList.addView(view);
-    }
-    private void onErrorMessage(ErrorMessage message) {
-        Toast.makeText(this, message.getErrorMessage(), Toast.LENGTH_LONG).show();
-    }
-    private void onSendMessage(ClientSendMessage message) {
-        Log.d("send", message.toString());
-        this.socketClient.writeToServer(message);
     }
 
 
@@ -153,18 +161,5 @@ public class Frp0TalkActivity extends AppCompatActivity {
                 emitter.onError(e);
             }
         }).subscribeOn(Schedulers.io());    // 上面的接收是网络操作，要在io中做
-    }
-
-    /**
-     * 更新列表的流
-     * @param receive$
-     * @param send$
-     * @return
-     */
-    private Observable<LinearLayout> createMessageListItemStream(Observable<ServerSendMessage> receive$, Observable<ClientSendMessage> send$) {
-        return Observable.merge(
-                receive$.map(message -> new ItemTextReceive(this, message.getMessage())),
-                send$.map(message -> new ItemTextSend(this, message.getMessage()))
-        );
     }
 }
