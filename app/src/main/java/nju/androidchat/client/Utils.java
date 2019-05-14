@@ -8,7 +8,11 @@ import android.widget.ScrollView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 
 import lombok.experimental.ExtensionMethod;
 import lombok.experimental.UtilityClass;
@@ -21,10 +25,18 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 @UtilityClass
 public class Utils {
+    List<Class> chatActivities = Arrays.asList(new Class[]
+            {
+                    Mvvm0TalkActivity.class,
+                    Mvc0TalkActivity.class,
+                    Mvp0TalkActivity.class,
+                    Frp0TalkActivity.class
+            });
+    Properties props = new Properties();
+    String CHAT_ACTIVITY_KEY = "chat_activity";
+    Class<?> CHAT_ACTIVITY = Mvvm0TalkActivity.class;
 
-    public final Class<?> CHAT_ACTIVITY = Mvvm0TalkActivity.class;
-
-    public void jumpTo(AppCompatActivity activity, Class<?> clazz) {
+    void jumpTo(AppCompatActivity activity, Class<?> clazz) {
         Intent intent = new Intent(activity.getBaseContext(), clazz);
         activity.startActivity(intent);
     }

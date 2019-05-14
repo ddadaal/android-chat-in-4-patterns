@@ -1,5 +1,6 @@
 package nju.androidchat.client;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -17,20 +18,38 @@ import nju.androidchat.client.frp0.Frp0TalkActivity;
 import nju.androidchat.client.socket.SocketClient;
 import nju.androidchat.shared.Shared;
 
+import java.io.IOException;
 import java.util.Objects;
 
 @Log
 public class MainActivity extends AppCompatActivity {
 
+
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        try {
+            Utils.props.load(getResources().getAssets().open("config.properties"));
+            String chatActivityClassName = Utils.props.getProperty(Utils.CHAT_ACTIVITY_KEY);
+            if (chatActivityClassName != null) {
+                Class classRead = Class.forName(chatActivityClassName);
+                if (Utils.chatActivities.contains(classRead)) {
+                    log.info("Current chatActivity is: " + chatActivityClassName);
+                    Utils.CHAT_ACTIVITY = Class.forName(chatActivityClassName);
+                }//不是候选类不用抛异常，因为有默认类
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_main);
 
         EditText editText1 = findViewById(R.id.ip_input);
 
         editText1.setText(SocketClient.SERVER_ADDRESS + ":" + Shared.SERVER_PORT);
-
     }
 
     public void onBtnConnectClicked(View view) {
