@@ -7,12 +7,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import lombok.extern.java.Log;
 import nju.androidchat.client.ClientMessage;
@@ -22,63 +26,54 @@ import nju.androidchat.client.component.ItemTextReceive;
 import nju.androidchat.client.component.ItemTextSend;
 import nju.androidchat.client.mvc0.Mvc0TalkController;
 import nju.androidchat.client.mvc0.Mvc0TalkModel;
+import nju.androidchat.client.socket.MessageListener;
+import nju.androidchat.client.socket.SocketClient;
+import nju.androidchat.shared.message.ClientSendMessage;
+import nju.androidchat.shared.message.ErrorMessage;
+import nju.androidchat.shared.message.Message;
+import nju.androidchat.shared.message.RecallMessage;
+import nju.androidchat.shared.message.ServerSendMessage;
 
 @Log
-public class Mvvm0TalkActivity extends AppCompatActivity implements Mvc0TalkModel.MessageListUpdateListener, TextView.OnEditorActionListener
-{
+public class Mvvm0TalkActivity extends AppCompatActivity implements MessageListener, TextView.OnEditorActionListener {
 
-    private Mvc0TalkModel model = new Mvc0TalkModel();
+    private List<ClientMessageObservable> messageList = new ArrayList<>();
+    private SocketClient client = SocketClient.getClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-
+        setContentView(R.layout.activity_main_mvvm);
+        ListView listView = findViewById(R.id.chat_content);
+        Mvvm0ListAdapter adapter = new Mvvm0ListAdapter(getLayoutInflater(), messageList);
+        listView.setAdapter(adapter);
         // Input事件处理
         EditText editText = findViewById(R.id.et_content);
         editText.setOnEditorActionListener(this);
 
-        // View向Model注册事件并开始监听
-        model.setMessageListener(this);
-        model.startListening();
+        // 注册自己
+        client.setMessageListener(this);
+
+//        // 测试用
+//        initData();
     }
 
-    // 处理Model更新事件，更新UI。注意这是在另外一个线程，所以不能直接操作
-    // 这里的处理事件的方法比较暴力，就是删除到
-    @Override
-    public void onListUpdate(List<ClientMessage> messages) {
-        runOnUiThread(() -> {
-            LinearLayout content = findViewById(R.id.chat_content);
 
-            // 删除所有已有的ItemText
-            content.removeAllViews();
-
-            // 增加ItemText
-            for (ClientMessage message: messages) {
-                String text = String.format("%s", message.getMessage());
-                // 如果是自己发的，增加ItemTextSend
-                if (message.getSenderUsername().equals(model.getUsername())) {
-                    content.addView(new ItemTextSend(this, text));
-                } else {
-                    content.addView(new ItemTextReceive(this, text));
-                }
-            }
-
-            // scroll to bottom
-            ScrollView scrollView = findViewById(R.id.content_scroll_view);
-            scrollView.post(() -> {
-                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-            });
-
-        });
-
+    private void initData(){
+        for(int i = 0; i < 10; i++){
+            String message = "This is the "+i+" message!";
+            LocalDateTime now = LocalDateTime.now();
+            UUID uuid = UUID.randomUUID();
+            String senderUsername = "Somebody";
+            ClientSendMessage clientSendMessage = new ClientSendMessage(uuid, now, message);
+            messageList.add(new ClientMessageObservable(clientSendMessage, senderUsername));
+        }
     }
 
     @Override
     public void onBackPressed() {
         AsyncTask.execute(() -> {
-            model.disconnect();
+            client.disconnect();
         });
 
         Utils.jumpToHome(this);
@@ -110,13 +105,42 @@ public class Mvvm0TalkActivity extends AppCompatActivity implements Mvc0TalkMode
     private void sendText() {
         EditText text = findViewById(R.id.et_content);
         String message = text.getText().toString();
+        LocalDateTime now = LocalDateTime.now();
+        UUID uuid = UUID.randomUUID();
+        String senderUsername = client.getUsername();
+        ClientSendMessage clientSendMessage = new ClientSendMessage(uuid, now, message);
+        messageList.add(new ClientMessageObservable(clientSendMessage, senderUsername));
         AsyncTask.execute(() -> {
-            model.sendInformation(message);
+            client.writeToServer(clientSendMessage);
         });
     }
 
     public void onBtnSendClicked(View v) {
         hideKeyboard();
         sendText();
+    }
+
+    @Override
+    public void onMessageReceived(Message message) {
+        if (message instanceof ServerSendMessage) {
+            // 接受到其他设备发来的消息
+            // 增加到自己的消息列表里，并通知UI修改
+            ServerSendMessage serverSendMessage = (ServerSendMessage) message;
+            log.info(String.format("%s sent a message: %s",
+                    serverSendMessage.getSenderUsername(),
+                    serverSendMessage.getMessage()
+            ));
+            messageList.add(new ClientMessageObservable(serverSendMessage));
+        } else if (message instanceof ErrorMessage) {
+            // 接收到服务器的错误消息
+            log.severe("Server error: " + ((ErrorMessage) message).getErrorMessage());
+
+        } else if (message instanceof RecallMessage) {
+            // 接受到服务器的撤回消息，MVVM-0不实现
+        } else {
+            // 不认识的消息
+            log.severe("Unsupported message received: " + message.toString());
+
+        }
     }
 }

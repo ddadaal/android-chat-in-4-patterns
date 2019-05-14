@@ -12,13 +12,14 @@ import java.util.Objects;
 import lombok.experimental.ExtensionMethod;
 import lombok.experimental.UtilityClass;
 import nju.androidchat.client.mvc0.Mvc0TalkActivity;
+import nju.androidchat.client.mvvm0.Mvvm0TalkActivity;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 @UtilityClass
 public class Utils {
 
-    public final Class<?> CHAT_ACTIVITY = Mvc0TalkActivity.class;
+    public final Class<?> CHAT_ACTIVITY = Mvvm0TalkActivity.class;
 
     public void jumpTo(AppCompatActivity activity, Class<?> clazz) {
         Intent intent = new Intent(activity.getBaseContext(), clazz);
