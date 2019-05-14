@@ -38,6 +38,7 @@
             android:layout_height="wrap_content">
 
             <Button
+                android:id="@+id/send_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="发送"
