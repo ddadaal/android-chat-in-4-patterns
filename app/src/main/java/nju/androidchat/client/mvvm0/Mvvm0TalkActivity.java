@@ -2,8 +2,10 @@ package nju.androidchat.client.mvvm0;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -17,7 +19,7 @@ import nju.androidchat.client.mvvm0.viewmodel.Mvvm0ListAdapter;
 import nju.androidchat.client.mvvm0.viewmodel.Mvvm0ViewModel;
 
 @Log
-public class Mvvm0TalkActivity extends AppCompatActivity {
+public class Mvvm0TalkActivity extends AppCompatActivity implements TextView.OnEditorActionListener {
     private Mvvm0ViewModel viewModel;
 
     @Override
@@ -62,5 +64,15 @@ public class Mvvm0TalkActivity extends AppCompatActivity {
     public void onBtnSendClicked(View v) {
         hideKeyboard();
         sendText();
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (Utils.send(actionId, event)) {
+            hideKeyboard();
+            // 异步地让Controller处理事件
+            sendText();
+        }
+        return false;
     }
 }

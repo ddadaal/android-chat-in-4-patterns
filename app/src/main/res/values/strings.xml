@@ -18,4 +18,5 @@
     <string name="ip_hint">服务器IP</string>
     <string name="username_hint">用户名</string>
     <string name="link_btn_word">连接</string>
+    <string name="send_message_word">发送</string>
 </resources>
