@@ -8,14 +8,13 @@ import android.widget.ScrollView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
-import lombok.experimental.ExtensionMethod;
 import lombok.experimental.UtilityClass;
+import lombok.extern.java.Log;
 import nju.androidchat.client.frp0.Frp0TalkActivity;
 import nju.androidchat.client.mvc0.Mvc0TalkActivity;
 import nju.androidchat.client.mvp0.Mvp0TalkActivity;
@@ -23,6 +22,7 @@ import nju.androidchat.client.mvvm0.Mvvm0TalkActivity;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
+@Log
 @UtilityClass
 public class Utils {
     List<Class> chatActivities = Arrays.asList(new Class[]

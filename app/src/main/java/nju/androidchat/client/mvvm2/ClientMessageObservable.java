@@ -1,4 +1,4 @@
-package nju.androidchat.client.mvvm0;
+package nju.androidchat.client.mvvm2;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;

@@ -1,4 +1,4 @@
-package nju.androidchat.client.mvvm0;
+package nju.androidchat.client.mvvm3;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -6,9 +6,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,7 +28,7 @@ import nju.androidchat.shared.message.RecallMessage;
 import nju.androidchat.shared.message.ServerSendMessage;
 
 @Log
-public class Mvvm0TalkActivity extends AppCompatActivity implements MessageListener, TextView.OnEditorActionListener {
+public class Mvvm3TalkActivity extends AppCompatActivity implements MessageListener, TextView.OnEditorActionListener {
 
     private List<ClientMessageObservable> messageList = new ArrayList<>();
     private SocketClient client = SocketClient.getClient();
@@ -40,7 +38,7 @@ public class Mvvm0TalkActivity extends AppCompatActivity implements MessageListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_mvvm);
         ListView listView = findViewById(R.id.chat_content);
-        Mvvm0ListAdapter adapter = new Mvvm0ListAdapter(getLayoutInflater(), messageList);
+        Mvvm3ListAdapter adapter = new Mvvm3ListAdapter(getLayoutInflater(), messageList);
         listView.setAdapter(adapter);
         // Input事件处理
         EditText editText = findViewById(R.id.et_content);
@@ -79,7 +77,6 @@ public class Mvvm0TalkActivity extends AppCompatActivity implements MessageListe
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (null != this.getCurrentFocus()) {
-            log.info("not on focus");
             return hideKeyboard();
         }
         return super.onTouchEvent(event);
