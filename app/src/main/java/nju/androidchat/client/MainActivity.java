@@ -33,10 +33,8 @@ public class MainActivity extends AppCompatActivity {
             String chatActivityClassName = Utils.props.getProperty(Utils.CHAT_ACTIVITY_KEY);
             if (chatActivityClassName != null) {
                 Class classRead = Class.forName(chatActivityClassName);
-                if (Utils.chatActivities.contains(classRead)) {
-                    log.info("Current chatActivity is: " + chatActivityClassName);
-                    Utils.CHAT_ACTIVITY = Class.forName(chatActivityClassName);
-                }//不是候选类不用抛异常，因为有默认类
+                log.info("Current chatActivity is: " + chatActivityClassName);
+                Utils.CHAT_ACTIVITY = classRead;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -69,8 +67,7 @@ public class MainActivity extends AppCompatActivity {
                     handler.post(() -> {
                         Toast.makeText(this, "登录成功！", Toast.LENGTH_SHORT).show();
 
-//                        Utils.jumpToChat(this);
-                        Utils.jumpTo(this, Frp0TalkActivity.class);
+                        Utils.jumpToChat(this);
                     });
                 } else {
                     handler.post(() -> {

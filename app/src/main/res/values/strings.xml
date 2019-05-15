@@ -19,4 +19,5 @@
     <string name="username_hint">用户名</string>
     <string name="link_btn_word">连接</string>
     <string name="send_message_word">发送</string>
+    <string name="to_backup_btn_word">进入备份界面</string>
 </resources>
