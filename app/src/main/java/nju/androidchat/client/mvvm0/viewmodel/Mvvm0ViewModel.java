@@ -36,6 +36,7 @@ public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
 
     public void setMessage(String message) {
         this.message = message;
+        notifyChange();
     }
 
     public Mvvm0ViewModel() {
