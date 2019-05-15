@@ -23,7 +23,7 @@
         </activity>
         <activity android:name=".mvc0.Mvc0TalkActivity"/>
         <activity android:name=".frp0.Frp0TalkActivity"/>
-        <activity android:name=".mvvm0.activity.Mvvm0TalkActivity" />
+        <activity android:name=".mvvm0.Mvvm0TalkActivity" />
         <activity android:name=".mvp0.Mvp0TalkActivity" />
     </application>
 </manifest>

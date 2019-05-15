@@ -18,7 +18,7 @@ import lombok.extern.java.Log;
 import nju.androidchat.client.frp0.Frp0TalkActivity;
 import nju.androidchat.client.mvc0.Mvc0TalkActivity;
 import nju.androidchat.client.mvp0.Mvp0TalkActivity;
-import nju.androidchat.client.mvvm0.activity.Mvvm0TalkActivity;
+import nju.androidchat.client.mvvm0.Mvvm0TalkActivity;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 

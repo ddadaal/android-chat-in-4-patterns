@@ -1,7 +1,6 @@
 package nju.androidchat.client.mvvm0.viewmodel;
 
 import android.os.AsyncTask;
-import android.view.LayoutInflater;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -13,6 +12,7 @@ import java.util.UUID;
 
 import lombok.Getter;
 import lombok.extern.java.Log;
+import nju.androidchat.client.BR;
 import nju.androidchat.client.mvvm0.model.ClientMessageObservable;
 import nju.androidchat.client.socket.MessageListener;
 import nju.androidchat.client.socket.SocketClient;
@@ -36,7 +36,7 @@ public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
 
     public void setMessage(String message) {
         this.message = message;
-        notifyChange();
+        notifyPropertyChanged(BR.message);
     }
 
     public Mvvm0ViewModel() {
@@ -53,6 +53,7 @@ public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
         String senderUsername = client.getUsername();
         ClientSendMessage clientSendMessage = new ClientSendMessage(uuid, now, message);
         messageObservableList.add(new ClientMessageObservable(clientSendMessage, senderUsername));
+
         AsyncTask.execute(() -> client.writeToServer(clientSendMessage));
     }
 

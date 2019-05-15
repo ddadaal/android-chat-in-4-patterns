@@ -10,8 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import nju.androidchat.client.BR;
-import nju.androidchat.client.mvvm0.custom.Direction;
-import nju.androidchat.client.mvvm0.custom.State;
+import nju.androidchat.client.mvvm0.model.Direction;
+import nju.androidchat.client.mvvm0.model.State;
 import nju.androidchat.shared.message.ClientSendMessage;
 import nju.androidchat.shared.message.ServerSendMessage;
 
@@ -43,59 +43,13 @@ public class ClientMessageObservable extends BaseObservable {
         notifyPropertyChanged(BR.message);
     }
 
-    public void setState(State state){
-        this.state = state;
-        notifyPropertyChanged(BR.state);
-    }
-
-    public boolean isAlignLeft(){
-        if(direction.equals(Direction.RECEIVE)){
-            return false;
-        }
-        if(direction.equals(Direction.SEND)){
-            return true;
-        }
-        return true;
-    }
-
-    public void setAlignLeft(){
-
-    }
-
-    public boolean isAlignRight(){
-        if(direction.equals(Direction.RECEIVE)){
-            return true;
-        }
-        if(direction.equals(Direction.SEND)){
-            return false;
-        }
-        return false;
-    }
-
-    public void setAlignRight(){
-
-    }
-
-    public String getPicture(){
-        if(direction.equals(Direction.RECEIVE)){
-            return "@mipmap/ic_head_default_left";
-        }
-        if(direction.equals(Direction.SEND)){
-            return "@mipmap/ic_head_default_right";
-        }
-        return "";
-    }
-
-    public void setPicture(){
-
-    }
-
     public ClientMessageObservable(ClientSendMessage clientSendMessage, String username){
         direction = Direction.SEND;
         messageId = clientSendMessage.getId();
         time = clientSendMessage.getTime();
         message = clientSendMessage.getMessage();
         senderUsername = username;
+        state = State.SENT;
     }
 
     public ClientMessageObservable(ServerSendMessage serverSendMessage){

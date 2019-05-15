@@ -14,7 +14,7 @@ import java.util.Objects;
 import lombok.AllArgsConstructor;
 import nju.androidchat.client.BR;
 import nju.androidchat.client.R;
-import nju.androidchat.client.mvvm0.custom.Direction;
+import nju.androidchat.client.mvvm0.model.Direction;
 import nju.androidchat.client.mvvm0.model.ClientMessageObservable;
 
 @AllArgsConstructor
