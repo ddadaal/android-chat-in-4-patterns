@@ -43,6 +43,10 @@ public class ClientMessageObservable extends BaseObservable {
         notifyPropertyChanged(BR.message);
     }
 
+    public boolean isSend(){
+        return direction.equals(Direction.SEND);
+    }
+
     public ClientMessageObservable(ClientSendMessage clientSendMessage, String username){
         direction = Direction.SEND;
         messageId = clientSendMessage.getId();

@@ -27,5 +27,7 @@
         <activity android:name=".mvp0.Mvp0TalkActivity" />
         <activity android:name=".mvc1.Mvc1TalkActivity"/>
         <activity android:name=".mvc1.Mvc1BackupActivity"/>
+
     </application>
+
 </manifest>

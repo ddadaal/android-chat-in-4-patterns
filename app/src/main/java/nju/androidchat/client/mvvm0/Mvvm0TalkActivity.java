@@ -15,22 +15,20 @@ import lombok.extern.java.Log;
 import nju.androidchat.client.BR;
 import nju.androidchat.client.R;
 import nju.androidchat.client.Utils;
-import nju.androidchat.client.mvvm0.viewmodel.Mvvm0ListAdapter;
 import nju.androidchat.client.mvvm0.viewmodel.Mvvm0ViewModel;
+import nju.androidchat.client.mvvm0.viewmodel.UiThreadRunner;
 
 @Log
-public class Mvvm0TalkActivity extends AppCompatActivity implements TextView.OnEditorActionListener {
+public class Mvvm0TalkActivity extends AppCompatActivity implements TextView.OnEditorActionListener, UiThreadRunner {
     private Mvvm0ViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new Mvvm0ViewModel();
+        viewModel = new Mvvm0ViewModel(this);
         setContentView(R.layout.activity_main_mvvm);
         ViewDataBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main_mvvm);
-        Mvvm0ListAdapter adapter = new Mvvm0ListAdapter(getLayoutInflater(), viewModel.getMessageObservableList());
         binding.setVariable(BR.viewModel, viewModel);
-        binding.setVariable(BR.adapter, adapter);
     }
 
 

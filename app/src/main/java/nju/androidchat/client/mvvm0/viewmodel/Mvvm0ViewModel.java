@@ -4,15 +4,17 @@ import android.os.AsyncTask;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
+import androidx.databinding.ObservableArrayList;
+import androidx.databinding.ObservableInt;
+import androidx.databinding.ObservableList;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import lombok.Getter;
 import lombok.extern.java.Log;
 import nju.androidchat.client.BR;
+import nju.androidchat.client.R;
 import nju.androidchat.client.mvvm0.model.ClientMessageObservable;
 import nju.androidchat.client.socket.MessageListener;
 import nju.androidchat.client.socket.SocketClient;
@@ -29,22 +31,29 @@ public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
     @Getter
     private String messageToSend;
     @Getter
-    private List<ClientMessageObservable> messageObservableList;
+    private ObservableList<ClientMessageObservable> messageObservableList;
     @Getter
     private SocketClient client;
-
+    @Getter
+    private ObservableInt layout = new ObservableInt(R.layout.item_text_mvvm);
+    private UiThreadRunner uiThreadRunner;
 
     public void setMessageToSend(String messageToSend) {
         this.messageToSend = messageToSend;
         notifyPropertyChanged(BR.messageToSend);
     }
 
-    public Mvvm0ViewModel() {
+    public Mvvm0ViewModel(UiThreadRunner uiThreadRunner) {
         messageToSend = "";
-        messageObservableList = new ArrayList<>();
+        messageObservableList = new ObservableArrayList<>();
         client = SocketClient.getClient();
         client.setMessageListener(this);
         client.startListening();
+        this.uiThreadRunner = uiThreadRunner;
+    }
+
+    private void updateList(ClientMessageObservable clientMessage) {
+        uiThreadRunner.runOnUiThread(() -> messageObservableList.add(clientMessage));
     }
 
     public void sendMessage() {
@@ -52,7 +61,8 @@ public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
         UUID uuid = UUID.randomUUID();
         String senderUsername = client.getUsername();
         ClientSendMessage clientSendMessage = new ClientSendMessage(uuid, now, messageToSend);
-        messageObservableList.add(new ClientMessageObservable(clientSendMessage, senderUsername));
+        ClientMessageObservable clientMessageObservable = new ClientMessageObservable(clientSendMessage, senderUsername);
+        updateList(clientMessageObservable);
 
         AsyncTask.execute(() -> client.writeToServer(clientSendMessage));
     }
@@ -67,7 +77,8 @@ public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
                     serverSendMessage.getSenderUsername(),
                     serverSendMessage.getMessage()
             ));
-            messageObservableList.add(new ClientMessageObservable(serverSendMessage));
+            ClientMessageObservable clientMessage = new ClientMessageObservable(serverSendMessage);
+            updateList(clientMessage);
         } else if (message instanceof ErrorMessage) {
             // 接收到服务器的错误消息
             log.severe("Server error: " + ((ErrorMessage) message).getErrorMessage());
