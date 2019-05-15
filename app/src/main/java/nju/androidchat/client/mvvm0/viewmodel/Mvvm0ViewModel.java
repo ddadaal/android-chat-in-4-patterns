@@ -27,20 +27,20 @@ public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
 
     @Bindable
     @Getter
-    private String message;
+    private String messageToSend;
     @Getter
     private List<ClientMessageObservable> messageObservableList;
     @Getter
     private SocketClient client;
 
 
-    public void setMessage(String message) {
-        this.message = message;
-        notifyPropertyChanged(BR.message);
+    public void setMessageToSend(String messageToSend) {
+        this.messageToSend = messageToSend;
+        notifyPropertyChanged(BR.messageToSend);
     }
 
     public Mvvm0ViewModel() {
-        message = "";
+        messageToSend = "";
         messageObservableList = new ArrayList<>();
         client = SocketClient.getClient();
         client.setMessageListener(this);
@@ -51,7 +51,7 @@ public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
         LocalDateTime now = LocalDateTime.now();
         UUID uuid = UUID.randomUUID();
         String senderUsername = client.getUsername();
-        ClientSendMessage clientSendMessage = new ClientSendMessage(uuid, now, message);
+        ClientSendMessage clientSendMessage = new ClientSendMessage(uuid, now, messageToSend);
         messageObservableList.add(new ClientMessageObservable(clientSendMessage, senderUsername));
 
         AsyncTask.execute(() -> client.writeToServer(clientSendMessage));
@@ -63,7 +63,7 @@ public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
             // 接受到其他设备发来的消息
             // 增加到自己的消息列表里，并通知UI修改
             ServerSendMessage serverSendMessage = (ServerSendMessage) message;
-            log.info(String.format("%s sent a message: %s",
+            log.info(String.format("%s sent a messageToSend: %s",
                     serverSendMessage.getSenderUsername(),
                     serverSendMessage.getMessage()
             ));
@@ -76,7 +76,7 @@ public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
             // 接受到服务器的撤回消息，MVVM-0不实现
         } else {
             // 不认识的消息
-            log.severe("Unsupported message received: " + message.toString());
+            log.severe("Unsupported messageToSend received: " + message.toString());
 
         }
     }
