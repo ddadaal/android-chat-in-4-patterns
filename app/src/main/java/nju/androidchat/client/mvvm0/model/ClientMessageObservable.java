@@ -1,4 +1,4 @@
-package nju.androidchat.client.mvvm3;
+package nju.androidchat.client.mvvm0.model;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -8,11 +8,15 @@ import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import nju.androidchat.client.BR;
+import nju.androidchat.client.mvvm0.custom.Direction;
+import nju.androidchat.client.mvvm0.custom.State;
 import nju.androidchat.shared.message.ClientSendMessage;
 import nju.androidchat.shared.message.ServerSendMessage;
 
 @AllArgsConstructor
+@NoArgsConstructor
 public class ClientMessageObservable extends BaseObservable {
     @Getter
     private UUID messageId;

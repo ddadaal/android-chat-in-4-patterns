@@ -1,4 +1,4 @@
-package nju.androidchat.client.mvvm3;
+package nju.androidchat.client.mvvm0.viewmodel;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +14,11 @@ import java.util.Objects;
 import lombok.AllArgsConstructor;
 import nju.androidchat.client.BR;
 import nju.androidchat.client.R;
+import nju.androidchat.client.mvvm0.custom.Direction;
+import nju.androidchat.client.mvvm0.model.ClientMessageObservable;
 
 @AllArgsConstructor
-public class Mvvm3ListAdapter extends BaseAdapter {
+public class Mvvm0ListAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private List<ClientMessageObservable> list;
 

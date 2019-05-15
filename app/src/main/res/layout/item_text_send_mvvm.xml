@@ -4,7 +4,7 @@
     <data>
         <variable
             name="messageBean"
-            type="nju.androidchat.client.mvvm0.ClientMessageObservable" />
+            type="nju.androidchat.client.mvvm0.model.ClientMessageObservable" />
     </data>
 
     <LinearLayout
