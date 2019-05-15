@@ -36,24 +36,27 @@ public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
     private SocketClient client;
     @Getter
     private ObservableInt layout = new ObservableInt(R.layout.item_text_mvvm);
-    private UiThreadRunner uiThreadRunner;
+    private UiOperator uiOperator;
 
     public void setMessageToSend(String messageToSend) {
         this.messageToSend = messageToSend;
         notifyPropertyChanged(BR.messageToSend);
     }
 
-    public Mvvm0ViewModel(UiThreadRunner uiThreadRunner) {
+    public Mvvm0ViewModel(UiOperator uiOperator) {
         messageToSend = "";
         messageObservableList = new ObservableArrayList<>();
         client = SocketClient.getClient();
         client.setMessageListener(this);
         client.startListening();
-        this.uiThreadRunner = uiThreadRunner;
+        this.uiOperator = uiOperator;
     }
 
     private void updateList(ClientMessageObservable clientMessage) {
-        uiThreadRunner.runOnUiThread(() -> messageObservableList.add(clientMessage));
+        uiOperator.runOnUiThread(() -> {
+            messageObservableList.add(clientMessage);
+            uiOperator.scrollListToBottom();
+        });
     }
 
     public void sendMessage() {

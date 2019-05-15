@@ -16,10 +16,10 @@ import nju.androidchat.client.BR;
 import nju.androidchat.client.R;
 import nju.androidchat.client.Utils;
 import nju.androidchat.client.mvvm0.viewmodel.Mvvm0ViewModel;
-import nju.androidchat.client.mvvm0.viewmodel.UiThreadRunner;
+import nju.androidchat.client.mvvm0.viewmodel.UiOperator;
 
 @Log
-public class Mvvm0TalkActivity extends AppCompatActivity implements TextView.OnEditorActionListener, UiThreadRunner {
+public class Mvvm0TalkActivity extends AppCompatActivity implements TextView.OnEditorActionListener, UiOperator {
     private Mvvm0ViewModel viewModel;
 
     @Override
@@ -72,5 +72,10 @@ public class Mvvm0TalkActivity extends AppCompatActivity implements TextView.OnE
             sendText();
         }
         return false;
+    }
+
+    @Override
+    public void scrollListToBottom() {
+        Utils.scrollListToBottom(this);
     }
 }
