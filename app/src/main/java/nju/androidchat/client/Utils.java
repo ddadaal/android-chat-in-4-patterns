@@ -17,6 +17,7 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.java.Log;
 import nju.androidchat.client.frp0.Frp0TalkActivity;
 import nju.androidchat.client.mvc0.Mvc0TalkActivity;
+import nju.androidchat.client.mvc1.Mvc1TalkActivity;
 import nju.androidchat.client.mvp0.Mvp0TalkActivity;
 import nju.androidchat.client.mvvm0.Mvvm0TalkActivity;
 
@@ -25,18 +26,11 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 @Log
 @UtilityClass
 public class Utils {
-    List<Class> chatActivities = Arrays.asList(new Class[]
-            {
-                    Mvvm0TalkActivity.class,
-                    Mvc0TalkActivity.class,
-                    Mvp0TalkActivity.class,
-                    Frp0TalkActivity.class
-            });
     Properties props = new Properties();
     String CHAT_ACTIVITY_KEY = "chat_activity";
     Class<?> CHAT_ACTIVITY = Mvvm0TalkActivity.class;
 
-    void jumpTo(AppCompatActivity activity, Class<?> clazz) {
+    public void jumpTo(AppCompatActivity activity, Class<?> clazz) {
         Intent intent = new Intent(activity.getBaseContext(), clazz);
         activity.startActivity(intent);
     }

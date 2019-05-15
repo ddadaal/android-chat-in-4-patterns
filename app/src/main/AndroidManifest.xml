@@ -25,5 +25,7 @@
         <activity android:name=".frp0.Frp0TalkActivity"/>
         <activity android:name=".mvvm0.Mvvm0TalkActivity" />
         <activity android:name=".mvp0.Mvp0TalkActivity" />
+        <activity android:name=".mvc1.Mvc1TalkActivity"/>
+        <activity android:name=".mvc1.Mvc1BackupActivity"/>
     </application>
 </manifest>
