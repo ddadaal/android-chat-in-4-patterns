@@ -42,7 +42,7 @@ public class Mvvm0ListAdapter extends BaseAdapter {
         ViewDataBinding viewDataBinding;
         ClientMessageObservable message = list.get(position);
         boolean isSend = message.getDirection().equals(Direction.SEND);
-        int layoutId = isSend ? R.layout.item_text_receive_mvvm : R.layout.item_text_send_mvvm;
+        int layoutId = isSend ? R.layout.item_text_send_mvvm : R.layout.item_text_receive_mvvm;
         if (convertView == null) {
             viewDataBinding = DataBindingUtil.inflate(layoutInflater, layoutId, null, false);
         } else {
