@@ -35,7 +35,7 @@ public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
     @Getter
     private SocketClient client;
     @Getter
-    private ObservableInt layout = new ObservableInt(R.layout.item_text_mvvm);
+    private ObservableInt layout = new ObservableInt(R.layout.item_text_receive_mvvm);
 
     private UiOperator uiOperator;
 

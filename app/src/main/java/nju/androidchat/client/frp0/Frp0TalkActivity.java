@@ -27,6 +27,7 @@ import nju.androidchat.client.R;
 import nju.androidchat.client.Utils;
 import nju.androidchat.client.component.ItemTextReceive;
 import nju.androidchat.client.component.ItemTextSend;
+import nju.androidchat.client.component.OnRecallMessageRequested;
 import nju.androidchat.client.socket.SocketClient;
 import nju.androidchat.shared.message.ClientSendMessage;
 import nju.androidchat.shared.message.ErrorMessage;
@@ -35,7 +36,7 @@ import nju.androidchat.shared.message.RecallMessage;
 import nju.androidchat.shared.message.ServerSendMessage;
 
 @lombok.extern.java.Log
-public class Frp0TalkActivity extends AppCompatActivity {
+public class Frp0TalkActivity extends AppCompatActivity implements OnRecallMessageRequested {
 
     private SocketClient socketClient;
     private Observable<ClientSendMessage> sendMessages$ = Observable.empty();
@@ -105,8 +106,8 @@ public class Frp0TalkActivity extends AppCompatActivity {
 
         // 4.3 合并发送流和服务器接受消息流，并更新UI
         this.addToViewMessages$ = Observable.merge(
-                this.serverSendMessages$.share().map(message -> new ItemTextReceive(this, message.getMessage())),
-                this.sendMessages$.map(message -> new ItemTextSend(this, message.getMessage()))
+                this.serverSendMessages$.share().map(message -> new ItemTextReceive(this, message.getMessage(), message.getMessageId())),
+                this.sendMessages$.map(message -> new ItemTextSend(this, message.getMessage(), message.getMessageId(), this))
         );
 
         this.addToViewMessages$
@@ -161,5 +162,10 @@ public class Frp0TalkActivity extends AppCompatActivity {
                 emitter.onError(e);
             }
         }).subscribeOn(Schedulers.io());    // 上面的接收是网络操作，要在io中做
+    }
+
+    @Override
+    public void onRecallMessageRequested(UUID messageId) {
+
     }
 }

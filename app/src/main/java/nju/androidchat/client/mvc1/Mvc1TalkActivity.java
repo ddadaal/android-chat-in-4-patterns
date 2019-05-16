@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
+import java.util.UUID;
 
 import lombok.extern.java.Log;
 import nju.androidchat.client.ClientMessage;
@@ -19,9 +20,10 @@ import nju.androidchat.client.R;
 import nju.androidchat.client.Utils;
 import nju.androidchat.client.component.ItemTextReceive;
 import nju.androidchat.client.component.ItemTextSend;
+import nju.androidchat.client.component.OnRecallMessageRequested;
 
 @Log
-public class Mvc1TalkActivity extends AppCompatActivity implements Mvc1TalkModel.MessageListUpdateListener, TextView.OnEditorActionListener
+public class Mvc1TalkActivity extends AppCompatActivity implements Mvc1TalkModel.MessageListUpdateListener, TextView.OnEditorActionListener, OnRecallMessageRequested
 {
 
     private Mvc1TalkModel model = new Mvc1TalkModel();
@@ -57,9 +59,9 @@ public class Mvc1TalkActivity extends AppCompatActivity implements Mvc1TalkModel
                 String text = String.format("%s", message.getMessage());
                 // 如果是自己发的，增加ItemTextSend
                 if (message.getSenderUsername().equals(model.getUsername())) {
-                    content.addView(new ItemTextSend(this, text));
+                    content.addView(new ItemTextSend(this, text, message.getMessageId(), this));
                 } else {
-                    content.addView(new ItemTextReceive(this, text));
+                    content.addView(new ItemTextReceive(this, text, message.getMessageId()));
                 }
             }
 
@@ -112,5 +114,11 @@ public class Mvc1TalkActivity extends AppCompatActivity implements Mvc1TalkModel
 
     public void onBtnToBackupClicked(View view) {
         Utils.jumpTo(this, Mvc1BackupActivity.class);
+    }
+
+    // 当用户长按消息，并选择撤回消息时做什么，MVC-1不实现\
+    @Override
+    public void onRecallMessageRequested(UUID messageId) {
+
     }
 }

@@ -17,7 +17,7 @@ import lombok.ToString;
 public class ClientSendMessage extends Message {
 
     @Getter
-    private UUID id;
+    private UUID messageId;
 
     @Getter
     private LocalDateTime time;

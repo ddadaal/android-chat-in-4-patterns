@@ -1,7 +1,5 @@
 package nju.androidchat.server.handlers;
 
-import java.util.UUID;
-
 import lombok.extern.java.Log;
 import nju.androidchat.server.ConnectionHandler;
 import nju.androidchat.shared.message.ClientSendMessage;
@@ -16,7 +14,7 @@ public class ClientSendMessageHandler implements MessageHandler<ClientSendMessag
         log.info("有客户端发来消息" + messageContent);
         // received a message, send it to all clients except sender
         connectionHandler.sendToAllOtherClients(new ServerSendMessage(
-                message.getId(),
+                message.getMessageId(),
                 message.getTime(),
                 connectionHandler.getUsername(),
                 messageContent

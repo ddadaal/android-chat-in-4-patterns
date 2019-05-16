@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
+import java.util.UUID;
 
 import lombok.extern.java.Log;
 import nju.androidchat.client.ClientMessage;
@@ -21,9 +22,13 @@ import nju.androidchat.client.R;
 import nju.androidchat.client.Utils;
 import nju.androidchat.client.component.ItemTextReceive;
 import nju.androidchat.client.component.ItemTextSend;
+import nju.androidchat.client.component.OnRecallMessageRequested;
 
 @Log
-public class Mvc0TalkActivity extends AppCompatActivity implements Mvc0TalkModel.MessageListUpdateListener, TextView.OnEditorActionListener
+public class Mvc0TalkActivity extends AppCompatActivity
+        implements Mvc0TalkModel.MessageListUpdateListener,
+        TextView.OnEditorActionListener,
+        OnRecallMessageRequested
 {
 
     private Mvc0TalkModel model = new Mvc0TalkModel();
@@ -57,11 +62,11 @@ public class Mvc0TalkActivity extends AppCompatActivity implements Mvc0TalkModel
             // 增加ItemText
             for (ClientMessage message: messages) {
                 String text = String.format("%s", message.getMessage());
-                // 如果是自己发的，增加ItemTextSend
+                // 如果是自己发的，增加ItemTextSend，并传入撤回请求事件处理
                 if (message.getSenderUsername().equals(model.getUsername())) {
-                    content.addView(new ItemTextSend(this, text));
+                    content.addView(new ItemTextSend(this, text, message.getMessageId(), this));
                 } else {
-                    content.addView(new ItemTextReceive(this, text));
+                    content.addView(new ItemTextReceive(this, text, message.getMessageId()));
                 }
             }
 
@@ -110,5 +115,11 @@ public class Mvc0TalkActivity extends AppCompatActivity implements Mvc0TalkModel
     public void onBtnSendClicked(View v) {
         hideKeyboard();
         sendText();
+    }
+
+    // 当用户长按消息，并选择撤回消息时做什么，MVC-0不实现
+    @Override
+    public void onRecallMessageRequested(UUID messageId) {
+
     }
 }

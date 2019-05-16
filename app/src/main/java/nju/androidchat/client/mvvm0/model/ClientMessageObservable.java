@@ -10,8 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import nju.androidchat.client.BR;
-import nju.androidchat.client.mvvm0.model.Direction;
-import nju.androidchat.client.mvvm0.model.State;
 import nju.androidchat.shared.message.ClientSendMessage;
 import nju.androidchat.shared.message.ServerSendMessage;
 
@@ -49,7 +47,7 @@ public class ClientMessageObservable extends BaseObservable {
 
     public ClientMessageObservable(ClientSendMessage clientSendMessage, String username){
         direction = Direction.SEND;
-        messageId = clientSendMessage.getId();
+        messageId = clientSendMessage.getMessageId();
         time = clientSendMessage.getTime();
         message = clientSendMessage.getMessage();
         senderUsername = username;

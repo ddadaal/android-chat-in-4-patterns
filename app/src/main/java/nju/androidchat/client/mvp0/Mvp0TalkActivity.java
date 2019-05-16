@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import lombok.extern.java.Log;
 import nju.androidchat.client.ClientMessage;
@@ -21,9 +22,10 @@ import nju.androidchat.client.R;
 import nju.androidchat.client.Utils;
 import nju.androidchat.client.component.ItemTextReceive;
 import nju.androidchat.client.component.ItemTextSend;
+import nju.androidchat.client.component.OnRecallMessageRequested;
 
 @Log
-public class Mvp0TalkActivity extends AppCompatActivity implements Mvp0Contract.View, TextView.OnEditorActionListener {
+public class Mvp0TalkActivity extends AppCompatActivity implements Mvp0Contract.View, TextView.OnEditorActionListener, OnRecallMessageRequested {
     private Mvp0Contract.Presenter presenter;
 
     @Override
@@ -57,9 +59,9 @@ public class Mvp0TalkActivity extends AppCompatActivity implements Mvp0Contract.
                         String text = String.format("%s", message.getMessage());
                         // 如果是自己发的，增加ItemTextSend
                         if (message.getSenderUsername().equals(this.presenter.getUsername())) {
-                            content.addView(new ItemTextSend(this, text));
+                            content.addView(new ItemTextSend(this, text, message.getMessageId(), this));
                         } else {
-                            content.addView(new ItemTextReceive(this, text));
+                            content.addView(new ItemTextReceive(this, text, message.getMessageId()));
                         }
                     }
 
@@ -106,5 +108,11 @@ public class Mvp0TalkActivity extends AppCompatActivity implements Mvp0Contract.
     public void onBtnSendClicked(View v) {
         hideKeyboard();
         sendText();
+    }
+
+    // 当用户长按消息，并选择撤回消息时做什么，MVP-0不实现
+    @Override
+    public void onRecallMessageRequested(UUID messageId) {
+
     }
 }

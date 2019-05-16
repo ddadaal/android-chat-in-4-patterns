@@ -29,6 +29,8 @@ public class Mvc1BackupActivity extends AppCompatActivity implements Mvc1BackupM
         model.setListener(this);
         controller = new Mvc1BackupController(model);
 
+        onUpdated();
+
     }
 
     public void onBtnBackupClicked(View view) {

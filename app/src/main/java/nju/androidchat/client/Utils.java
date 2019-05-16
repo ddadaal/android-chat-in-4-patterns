@@ -62,4 +62,9 @@ public class Utils {
         });
     }
 
+    // 简单地判断一个内容里有没有脏话
+    public boolean containsBadWords(String content) {
+        return content.contains("fuck");
+    }
+
 }
