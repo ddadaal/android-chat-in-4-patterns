@@ -25,8 +25,10 @@ public class Mvvm0TalkActivity extends AppCompatActivity implements TextView.OnE
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new Mvvm0ViewModel(this);
         setContentView(R.layout.activity_main_mvvm);
+
+        viewModel = new Mvvm0ViewModel(this);
+
         ViewDataBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main_mvvm);
         binding.setVariable(BR.viewModel, viewModel);
     }

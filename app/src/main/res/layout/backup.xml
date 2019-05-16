@@ -13,20 +13,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="备份"
+        android:height="200sp"
         android:id="@+id/backup_btn"
         android:onClick="onBtnBackupClicked"
-
+        android:textSize="40sp"
         />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="上次更新时间："/>
+        android:text="上次更新时间："
+        android:textSize="30sp"
+        />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/last_updated_lb"
+        android:textSize="30sp"
         />
 
 

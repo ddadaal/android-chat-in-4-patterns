@@ -36,6 +36,7 @@ public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
     private SocketClient client;
     @Getter
     private ObservableInt layout = new ObservableInt(R.layout.item_text_mvvm);
+
     private UiOperator uiOperator;
 
     public void setMessageToSend(String messageToSend) {
@@ -44,12 +45,13 @@ public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
     }
 
     public Mvvm0ViewModel(UiOperator uiOperator) {
+        this.uiOperator = uiOperator;
+
         messageToSend = "";
         messageObservableList = new ObservableArrayList<>();
         client = SocketClient.getClient();
         client.setMessageListener(this);
         client.startListening();
-        this.uiOperator = uiOperator;
     }
 
     private void updateList(ClientMessageObservable clientMessage) {

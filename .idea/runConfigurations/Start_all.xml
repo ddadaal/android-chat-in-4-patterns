@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Start all" type="CompoundRunConfigurationType">
+    <toRun name="Server" type="Application" />
     <toRun name="app1" type="AndroidRunConfigurationType" />
     <toRun name="app2" type="AndroidRunConfigurationType" />
-    <toRun name="Server" type="Application" />
     <method v="2" />
   </configuration>
 </component>

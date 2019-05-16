@@ -35,6 +35,7 @@ import android.widget.RelativeLayout;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import lombok.AllArgsConstructor;
 import nju.androidchat.client.BR;
 import nju.androidchat.client.R;
 import nju.androidchat.client.mvvm0.model.Direction;
@@ -42,6 +43,7 @@ import nju.androidchat.client.mvvm0.model.Direction;
 /**
  * Contains a BindingAdapter for assigning a list of items to a ViewGroup.
  */
+@lombok.extern.java.Log
 public class ListBindingAdapters {
     public static final String TAG = "ListBindingAdapters";
 
@@ -77,8 +79,7 @@ public class ListBindingAdapters {
             return; // nothing has changed
         }
 
-        EntryChangeListener listener =
-                ListenerUtil.getListener(viewGroup, R.id.entryListener);
+        EntryChangeListener listener = ListenerUtil.getListener(viewGroup, R.id.entryListener);
         if (oldEntries != newEntries && listener != null && oldEntries instanceof ObservableList) {
             ((ObservableList<T>) oldEntries).removeOnListChangedCallback(listener);
         }
@@ -121,12 +122,12 @@ public class ListBindingAdapters {
     @BindingAdapter({"layout_type"})
     public static void setLayoutLinear(LinearLayout linearLayout, Direction direction) {
         if (direction.equals(Direction.SEND)) {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)linearLayout.getLayoutParams();
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) linearLayout.getLayoutParams();
             params.addRule(RelativeLayout.START_OF, R.id.chat_item_header);
             params.addRule(RelativeLayout.ALIGN_PARENT_START);
             linearLayout.setLayoutParams(params);
         } else {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)linearLayout.getLayoutParams();
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) linearLayout.getLayoutParams();
             params.addRule(RelativeLayout.END_OF, R.id.chat_item_header);
             linearLayout.setLayoutParams(params);
         }
@@ -182,28 +183,18 @@ public class ListBindingAdapters {
     }
 
     /**
-     * Starts a transition only if on KITKAT or higher.
-     *
-     * @param root The scene root
-     */
-    private static void startTransition(ViewGroup root) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            TransitionManager.beginDelayedTransition(root);
-        }
-    }
-
-    /**
      * A listener to watch for changes in an Observable list and
      * animate the change.
      */
-    private static class EntryChangeListener
-            extends ObservableList.OnListChangedCallback {
+    private static class EntryChangeListener extends ObservableList.OnListChangedCallback {
         private final ViewGroup mTarget;
         private int mLayoutId;
+        LayoutInflater inflater;
 
-        public EntryChangeListener(ViewGroup target, int layoutId) {
-            mTarget = target;
-            mLayoutId = layoutId;
+        public EntryChangeListener(ViewGroup mTarget, int mLayoutId) {
+            this.mTarget = mTarget;
+            this.mLayoutId = mLayoutId;
+            this.inflater = (LayoutInflater) mTarget.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         public void setLayoutId(int layoutId) {
@@ -221,9 +212,7 @@ public class ListBindingAdapters {
             if (mLayoutId == 0) {
                 return;
             }
-            LayoutInflater inflater = (LayoutInflater) mTarget.getContext()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            startTransition(mTarget);
+
             final int end = start + count;
             for (int i = start; i < end; i++) {
                 Object data = observableList.get(i);
@@ -241,14 +230,10 @@ public class ListBindingAdapters {
             if (mLayoutId == 0) {
                 return;
             }
-            startTransition(mTarget);
             final int end = start + count;
-            LayoutInflater inflater = (LayoutInflater) mTarget.getContext()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             for (int i = end - 1; i >= start; i--) {
                 Object entry = observableList.get(i);
-                ViewDataBinding binding =
-                        bindLayout(inflater, mTarget, mLayoutId, entry);
+                ViewDataBinding binding = bindLayout(inflater, mTarget, mLayoutId, entry);
                 mTarget.addView(binding.getRoot(), start);
             }
         }
@@ -259,7 +244,6 @@ public class ListBindingAdapters {
             if (mLayoutId == 0) {
                 return;
             }
-            startTransition(mTarget);
             for (int i = 0; i < count; i++) {
                 View view = mTarget.getChildAt(from);
                 mTarget.removeViewAt(from);
@@ -274,7 +258,6 @@ public class ListBindingAdapters {
             if (mLayoutId == 0) {
                 return;
             }
-            startTransition(mTarget);
             for (int i = 0; i < count; i++) {
                 mTarget.removeViewAt(start);
             }
