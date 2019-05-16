@@ -23,29 +23,22 @@ import androidx.databinding.ObservableList;
 import androidx.databinding.ViewDataBinding;
 import androidx.databinding.adapters.ListenerUtil;
 
-import android.os.Build;
-import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-import lombok.AllArgsConstructor;
 import nju.androidchat.client.BR;
 import nju.androidchat.client.R;
-import nju.androidchat.client.mvvm0.model.Direction;
 
 /**
  * Contains a BindingAdapter for assigning a list of items to a ViewGroup.
  */
 @lombok.extern.java.Log
 public class ListBindingAdapters {
-    public static final String TAG = "ListBindingAdapters";
+    private static final String TAG = "ListBindingAdapters";
 
     /**
      * Prevent instantiation
@@ -104,36 +97,6 @@ public class ListBindingAdapters {
         }
     }
 
-    @BindingAdapter({"message_type"})
-    public static void setLayout(CircleImageView circleImageView, Direction direction) {
-        if (direction.equals(Direction.SEND)) {
-            circleImageView.setImageResource(R.mipmap.ic_head_default_right);
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) circleImageView.getLayoutParams();
-            params.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
-            circleImageView.setLayoutParams(params);
-        } else {
-            circleImageView.setImageResource(R.mipmap.ic_head_default_left);
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) circleImageView.getLayoutParams();
-            params.addRule(RelativeLayout.ALIGN_PARENT_START, RelativeLayout.TRUE);
-            circleImageView.setLayoutParams(params);
-        }
-    }
-
-    @BindingAdapter({"layout_type"})
-    public static void setLayoutLinear(LinearLayout linearLayout, Direction direction) {
-        if (direction.equals(Direction.SEND)) {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) linearLayout.getLayoutParams();
-            params.addRule(RelativeLayout.START_OF, R.id.chat_item_header);
-            params.addRule(RelativeLayout.ALIGN_PARENT_START);
-            linearLayout.setLayoutParams(params);
-        } else {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) linearLayout.getLayoutParams();
-            params.addRule(RelativeLayout.END_OF, R.id.chat_item_header);
-            linearLayout.setLayoutParams(params);
-        }
-    }
-
-
     /**
      * Inflates and binds a layout to an entry to the {@code data} variable
      * of the bound layout.
@@ -191,13 +154,13 @@ public class ListBindingAdapters {
         private int mLayoutId;
         LayoutInflater inflater;
 
-        public EntryChangeListener(ViewGroup mTarget, int mLayoutId) {
+        EntryChangeListener(ViewGroup mTarget, int mLayoutId) {
             this.mTarget = mTarget;
             this.mLayoutId = mLayoutId;
             this.inflater = (LayoutInflater) mTarget.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
-        public void setLayoutId(int layoutId) {
+        void setLayoutId(int layoutId) {
             mLayoutId = layoutId;
         }
 
