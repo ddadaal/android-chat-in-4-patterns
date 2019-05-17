@@ -90,20 +90,20 @@ public class Mvvm2TalkActivity extends AppCompatActivity implements TextView.OnE
             //    设置Title的图标
             builder.setIcon(R.drawable.ic_launcher_background);
             //    设置Title的内容
-            builder.setTitle("撤回消息提示");
+            builder.setTitle(getString(R.string.recall_message_title));
             //    设置Content来显示一个信息
-            builder.setMessage("确定撤回消息吗？");
+            builder.setMessage(getString(R.string.recall_message_question));
             //    设置一个PositiveButton
-            builder.setPositiveButton("确定", (dialog, which) -> {
+            builder.setPositiveButton(getString(R.string.recall_message_confirm), (dialog, which) -> {
                 recallHandler.handleRecall(messageObservable);
-                Toast.makeText(this, "撤回消息成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.after_recall_success), Toast.LENGTH_SHORT).show();
             });
             //    设置一个NegativeButton
-            builder.setNegativeButton("取消", (dialog, which) -> Toast.makeText(this, "已取消撤回操作", Toast.LENGTH_SHORT).show());
+            builder.setNegativeButton(getString(R.string.recall_message_cancel), (dialog, which) -> Toast.makeText(this, getString(R.string.after_recall_cancel), Toast.LENGTH_SHORT).show());
             //    显示出该对话框
             builder.show();
         }else {
-            Toast.makeText(this, "不是您发出的消息，不能撤回", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.can_not_recall), Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -20,4 +20,11 @@
     <string name="link_btn_word">连接</string>
     <string name="send_message_word">发送</string>
     <string name="to_backup_btn_word">进入备份界面</string>
+    <string name="recall_message_title">撤回消息提示</string>
+    <string name="recall_message_question">确定撤回消息吗</string>
+    <string name="recall_message_confirm">确定</string>
+    <string name="recall_message_cancel">取消</string>
+    <string name="after_recall_success">撤回消息成功</string>
+    <string name="after_recall_cancel">已取消撤回操作</string>
+    <string name="can_not_recall">不是您发出的消息，不能撤回</string>
 </resources>
