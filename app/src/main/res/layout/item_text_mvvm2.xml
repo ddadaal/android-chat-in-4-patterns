@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="recallHandler"
-            type="nju.androidchat.client.mvvm2.viewmodel.Mvvm2ViewModel" />
+            name="longClickListener"
+            type="nju.androidchat.client.mvvm2.viewmodel.LongClickListener" />
         <variable
             name="messageBean"
             type="nju.androidchat.client.mvvm2.model.ClientMessageObservable" />
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:onClick="@{()->messageBean.onLongClick()}"
+        android:onClick="@{()->longClickListener.onLongClick(messageBean)}"
         android:padding="5dp">
 
         <TextView

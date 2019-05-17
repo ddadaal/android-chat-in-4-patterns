@@ -29,6 +29,7 @@
                 android:orientation="vertical"
                 app:entries="@{viewModel.messageObservableList}"
                 app:layout="@{viewModel.layout}"
+                app:listener="@{viewModel}"
                 >
             </LinearLayout>
         </ScrollView>
