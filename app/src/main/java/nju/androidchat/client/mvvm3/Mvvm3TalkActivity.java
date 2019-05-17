@@ -6,6 +6,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -25,11 +26,11 @@ public class Mvvm3TalkActivity extends AppCompatActivity implements TextView.OnE
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_mvvm);
+        setContentView(R.layout.activity_main_mvvm3);
 
         viewModel = new Mvvm3ViewModel(this);
 
-        ViewDataBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main_mvvm);
+        ViewDataBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main_mvvm3);
         binding.setVariable(BR.viewModel, viewModel);
     }
 
@@ -79,5 +80,10 @@ public class Mvvm3TalkActivity extends AppCompatActivity implements TextView.OnE
     @Override
     public void scrollListToBottom() {
         Utils.scrollListToBottom(this);
+    }
+
+    @Override
+    public void sendBadWordNotice() {
+        Toast.makeText(this, getString(R.string.bad_word_notice), Toast.LENGTH_SHORT).show();
     }
 }

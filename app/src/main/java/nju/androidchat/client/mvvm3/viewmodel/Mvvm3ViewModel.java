@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.extern.java.Log;
 import nju.androidchat.client.BR;
 import nju.androidchat.client.R;
+import nju.androidchat.client.Utils;
 import nju.androidchat.client.mvvm3.model.ClientMessageObservable;
 import nju.androidchat.client.socket.MessageListener;
 import nju.androidchat.client.socket.SocketClient;
@@ -35,7 +36,7 @@ public class Mvvm3ViewModel extends BaseObservable implements MessageListener {
     @Getter
     private SocketClient client;
     @Getter
-    private ObservableInt layout = new ObservableInt(R.layout.item_text_mvvm);
+    private ObservableInt layout = new ObservableInt(R.layout.item_text_mvvm3);
 
     private UiOperator uiOperator;
 
@@ -62,14 +63,17 @@ public class Mvvm3ViewModel extends BaseObservable implements MessageListener {
     }
 
     public void sendMessage() {
-        LocalDateTime now = LocalDateTime.now();
-        UUID uuid = UUID.randomUUID();
-        String senderUsername = client.getUsername();
-        ClientSendMessage clientSendMessage = new ClientSendMessage(uuid, now, messageToSend);
-        ClientMessageObservable clientMessageObservable = new ClientMessageObservable(clientSendMessage, senderUsername);
-        updateList(clientMessageObservable);
-
-        AsyncTask.execute(() -> client.writeToServer(clientSendMessage));
+        if (Utils.containsBadWords(messageToSend)) {
+            uiOperator.sendBadWordNotice();
+        } else {
+            LocalDateTime now = LocalDateTime.now();
+            UUID uuid = UUID.randomUUID();
+            String senderUsername = client.getUsername();
+            ClientSendMessage clientSendMessage = new ClientSendMessage(uuid, now, messageToSend);
+            ClientMessageObservable clientMessageObservable = new ClientMessageObservable(clientSendMessage, senderUsername);
+            updateList(clientMessageObservable);
+            AsyncTask.execute(() -> client.writeToServer(clientSendMessage));
+        }
     }
 
     @Override

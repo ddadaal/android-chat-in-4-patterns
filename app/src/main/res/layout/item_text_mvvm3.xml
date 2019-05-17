@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="messageBean"
+            type="nju.androidchat.client.mvvm3.model.ClientMessageObservable" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/ll_text_mvvm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/item_tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#999999"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/chat_item_header"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:message_type="@{messageBean.direction}" />
+
+            <LinearLayout
+                android:id="@+id/chat_item_layout_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="end|center_vertical"
+                android:orientation="horizontal"
+                app:layout_type="@{messageBean.direction}">
+
+                <TextView
+                    android:id="@+id/chat_item_content_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@{messageBean.send?@drawable/message_text_send:@drawable/message_text_receive}"
+                    android:text="@{messageBean.message}"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</layout>
