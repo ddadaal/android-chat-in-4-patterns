@@ -1,4 +1,4 @@
-package nju.androidchat.client.mvvm0.model;
+package nju.androidchat.client.mvvm2.model;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -9,12 +9,16 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.java.Log;
 import nju.androidchat.client.BR;
+import nju.androidchat.client.Utils;
+import nju.androidchat.client.mvvm2.viewmodel.LongClickListener;
 import nju.androidchat.shared.message.ClientSendMessage;
 import nju.androidchat.shared.message.ServerSendMessage;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Log
 public class ClientMessageObservable extends BaseObservable {
     @Getter
     private UUID messageId;
@@ -36,8 +40,7 @@ public class ClientMessageObservable extends BaseObservable {
     @Bindable
     private State state;
 
-    @Getter
-    private final String withdrawnMessage = "（已撤回）";
+    private LongClickListener longClickListener;
 
     public void setMessage(String message) {
         this.message = message;
@@ -46,6 +49,9 @@ public class ClientMessageObservable extends BaseObservable {
 
     public void setState(State state) {
         this.state = state;
+        if (state.equals(State.WITHDRAWN)) {
+            setMessage(Utils.withDrawnMessage);
+        }
         notifyPropertyChanged(BR.state);
     }
 
@@ -53,25 +59,27 @@ public class ClientMessageObservable extends BaseObservable {
         return direction.equals(Direction.SEND);
     }
 
-    public boolean isWithdrawn() {
-        return state.equals(State.WITHDRAWN);
-    }
-
-    public ClientMessageObservable(ClientSendMessage clientSendMessage, String username) {
+    public ClientMessageObservable(ClientSendMessage clientSendMessage, String username, LongClickListener longClickListener) {
         direction = Direction.SEND;
         messageId = clientSendMessage.getMessageId();
         time = clientSendMessage.getTime();
         message = clientSendMessage.getMessage();
         senderUsername = username;
         state = State.SENT;
+        this.longClickListener = longClickListener;
     }
 
-    public ClientMessageObservable(ServerSendMessage serverSendMessage) {
+    public ClientMessageObservable(ServerSendMessage serverSendMessage, LongClickListener longClickListener) {
         direction = Direction.RECEIVE;
         messageId = serverSendMessage.getMessageId();
         time = serverSendMessage.getTime();
         message = serverSendMessage.getMessage();
         senderUsername = serverSendMessage.getSenderUsername();
         state = State.SENT;
+        this.longClickListener = longClickListener;
+    }
+
+    public boolean onLongClick() {
+        return longClickListener.onLongClick(this);
     }
 }

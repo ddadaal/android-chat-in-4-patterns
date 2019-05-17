@@ -27,6 +27,8 @@
         <activity android:name=".mvp0.Mvp0TalkActivity" />
         <activity android:name=".mvc1.Mvc1TalkActivity"/>
         <activity android:name=".mvc1.Mvc1BackupActivity"/>
+        <activity android:name=".mvvm2.Mvvm2TalkActivity" />
+        <activity android:name=".mvvm3.Mvvm3TalkActivity" />
 
     </application>
 

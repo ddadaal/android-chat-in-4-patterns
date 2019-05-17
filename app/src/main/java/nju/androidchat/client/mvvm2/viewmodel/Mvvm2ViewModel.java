@@ -1,4 +1,4 @@
-package nju.androidchat.client.mvvm0.viewmodel;
+package nju.androidchat.client.mvvm2.viewmodel;
 
 import android.os.AsyncTask;
 
@@ -15,17 +15,19 @@ import lombok.Getter;
 import lombok.extern.java.Log;
 import nju.androidchat.client.BR;
 import nju.androidchat.client.R;
-import nju.androidchat.client.mvvm0.model.ClientMessageObservable;
+import nju.androidchat.client.mvvm2.model.ClientMessageObservable;
+import nju.androidchat.client.mvvm2.model.State;
 import nju.androidchat.client.socket.MessageListener;
 import nju.androidchat.client.socket.SocketClient;
 import nju.androidchat.shared.message.ClientSendMessage;
 import nju.androidchat.shared.message.ErrorMessage;
 import nju.androidchat.shared.message.Message;
 import nju.androidchat.shared.message.RecallMessage;
+import nju.androidchat.shared.message.RecallRequestMessage;
 import nju.androidchat.shared.message.ServerSendMessage;
 
 @Log
-public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
+public class Mvvm2ViewModel extends BaseObservable implements MessageListener, RecallHandler, LongClickListener {
 
     @Bindable
     @Getter
@@ -35,7 +37,7 @@ public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
     @Getter
     private SocketClient client;
     @Getter
-    private ObservableInt layout = new ObservableInt(R.layout.item_text_mvvm);
+    private ObservableInt layout = new ObservableInt(R.layout.item_text_mvvm2);
 
     private UiOperator uiOperator;
 
@@ -44,9 +46,8 @@ public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
         notifyPropertyChanged(BR.messageToSend);
     }
 
-    public Mvvm0ViewModel(UiOperator uiOperator) {
+    public Mvvm2ViewModel(UiOperator uiOperator) {
         this.uiOperator = uiOperator;
-
         messageToSend = "";
         messageObservableList = new ObservableArrayList<>();
         client = SocketClient.getClient();
@@ -61,15 +62,33 @@ public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
         });
     }
 
+    private void recallMessage(UUID uuid) {
+        uiOperator.runOnUiThread(() -> {
+            for (int i = 0; i < messageObservableList.size(); i++) {
+                ClientMessageObservable clientMessageObservable = messageObservableList.get(i);
+                if (clientMessageObservable.getMessageId().equals(uuid)) {
+                    clientMessageObservable.setState(State.WITHDRAWN);
+                    break;
+                }
+            }
+        });
+    }
+
+
     public void sendMessage() {
         LocalDateTime now = LocalDateTime.now();
         UUID uuid = UUID.randomUUID();
         String senderUsername = client.getUsername();
         ClientSendMessage clientSendMessage = new ClientSendMessage(uuid, now, messageToSend);
-        ClientMessageObservable clientMessageObservable = new ClientMessageObservable(clientSendMessage, senderUsername);
+        ClientMessageObservable clientMessageObservable = new ClientMessageObservable(clientSendMessage, senderUsername, this);
         updateList(clientMessageObservable);
 
         AsyncTask.execute(() -> client.writeToServer(clientSendMessage));
+    }
+
+    private void sendRecallRequest(UUID uuid) {
+        RecallRequestMessage recallRequestMessage = new RecallRequestMessage(uuid);
+        AsyncTask.execute(() -> client.writeToServer(recallRequestMessage));
     }
 
     @Override
@@ -82,19 +101,37 @@ public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
                     serverSendMessage.getSenderUsername(),
                     serverSendMessage.getMessage()
             ));
-            ClientMessageObservable clientMessage = new ClientMessageObservable(serverSendMessage);
+            ClientMessageObservable clientMessage = new ClientMessageObservable(serverSendMessage, this);
             updateList(clientMessage);
         } else if (message instanceof ErrorMessage) {
             // 接收到服务器的错误消息
             log.severe("Server error: " + ((ErrorMessage) message).getErrorMessage());
 
         } else if (message instanceof RecallMessage) {
-            // 接受到服务器的撤回消息，MVVM-0不实现
+            RecallMessage recallMessage = (RecallMessage) message;
+            UUID uuid = recallMessage.getMessageId();
+            log.info(String.format("A recallMessage received: %s",
+                    uuid
+            ));
+            recallMessage(uuid);
         } else {
             // 不认识的消息
             log.severe("Unsupported messageToSend received: " + message.toString());
 
         }
+    }
+
+    @Override
+    public boolean onLongClick(ClientMessageObservable messageObservable) {
+        uiOperator.showRecallUi(messageObservable, this);
+        return true;
+    }
+
+    @Override
+    public void handleRecall(ClientMessageObservable messageObservable) {
+        messageObservable.setState(State.WITHDRAWN);
+        UUID uuid = messageObservable.getMessageId();
+        sendRecallRequest(uuid);
     }
 
     public void disconnect() {

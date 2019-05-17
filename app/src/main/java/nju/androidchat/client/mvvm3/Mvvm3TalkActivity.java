@@ -1,4 +1,4 @@
-package nju.androidchat.client.mvvm0;
+package nju.androidchat.client.mvvm3;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,17 +15,20 @@ import lombok.extern.java.Log;
 import nju.androidchat.client.BR;
 import nju.androidchat.client.R;
 import nju.androidchat.client.Utils;
-import nju.androidchat.client.mvvm0.viewmodel.Mvvm0ViewModel;
-import nju.androidchat.client.mvvm0.viewmodel.UiOperator;
+import nju.androidchat.client.mvvm3.viewmodel.Mvvm3ViewModel;
+import nju.androidchat.client.mvvm3.viewmodel.UiOperator;
 
 @Log
-public class Mvvm0TalkActivity extends AppCompatActivity implements TextView.OnEditorActionListener, UiOperator {
-    private Mvvm0ViewModel viewModel;
+public class Mvvm3TalkActivity extends AppCompatActivity implements TextView.OnEditorActionListener, UiOperator {
+    private Mvvm3ViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new Mvvm0ViewModel(this);
+        setContentView(R.layout.activity_main_mvvm);
+
+        viewModel = new Mvvm3ViewModel(this);
+
         ViewDataBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main_mvvm);
         binding.setVariable(BR.viewModel, viewModel);
     }
