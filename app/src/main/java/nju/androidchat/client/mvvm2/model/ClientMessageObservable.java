@@ -40,8 +40,6 @@ public class ClientMessageObservable extends BaseObservable {
     @Bindable
     private State state;
 
-    private LongClickListener longClickListener;
-
     public void setMessage(String message) {
         this.message = message;
         notifyPropertyChanged(BR.message);
@@ -59,27 +57,22 @@ public class ClientMessageObservable extends BaseObservable {
         return direction.equals(Direction.SEND);
     }
 
-    public ClientMessageObservable(ClientSendMessage clientSendMessage, String username, LongClickListener longClickListener) {
+    public ClientMessageObservable(ClientSendMessage clientSendMessage, String username) {
         direction = Direction.SEND;
         messageId = clientSendMessage.getMessageId();
         time = clientSendMessage.getTime();
         message = clientSendMessage.getMessage();
         senderUsername = username;
         state = State.SENT;
-        this.longClickListener = longClickListener;
     }
 
-    public ClientMessageObservable(ServerSendMessage serverSendMessage, LongClickListener longClickListener) {
+    public ClientMessageObservable(ServerSendMessage serverSendMessage) {
         direction = Direction.RECEIVE;
         messageId = serverSendMessage.getMessageId();
         time = serverSendMessage.getTime();
         message = serverSendMessage.getMessage();
         senderUsername = serverSendMessage.getSenderUsername();
         state = State.SENT;
-        this.longClickListener = longClickListener;
     }
 
-    public boolean onLongClick() {
-        return longClickListener.onLongClick(this);
-    }
 }

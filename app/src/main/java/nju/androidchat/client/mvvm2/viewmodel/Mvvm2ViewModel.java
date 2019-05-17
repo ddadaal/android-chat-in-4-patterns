@@ -80,7 +80,7 @@ public class Mvvm2ViewModel extends BaseObservable implements MessageListener, R
         UUID uuid = UUID.randomUUID();
         String senderUsername = client.getUsername();
         ClientSendMessage clientSendMessage = new ClientSendMessage(uuid, now, messageToSend);
-        ClientMessageObservable clientMessageObservable = new ClientMessageObservable(clientSendMessage, senderUsername, this);
+        ClientMessageObservable clientMessageObservable = new ClientMessageObservable(clientSendMessage, senderUsername);
         updateList(clientMessageObservable);
 
         AsyncTask.execute(() -> client.writeToServer(clientSendMessage));
@@ -101,7 +101,7 @@ public class Mvvm2ViewModel extends BaseObservable implements MessageListener, R
                     serverSendMessage.getSenderUsername(),
                     serverSendMessage.getMessage()
             ));
-            ClientMessageObservable clientMessage = new ClientMessageObservable(serverSendMessage, this);
+            ClientMessageObservable clientMessage = new ClientMessageObservable(serverSendMessage);
             updateList(clientMessage);
         } else if (message instanceof ErrorMessage) {
             // 接收到服务器的错误消息

@@ -63,11 +63,11 @@ public class ListBindingAdapters {
      * The layout, &commat;layout/item for example, must have a single variable named
      * {@code data}.
      */
-    @BindingAdapter({"entries", "layout"})
+    @BindingAdapter({"entries", "layout", "listener"})
     public static <T> void setEntries(ViewGroup viewGroup,
-                                      List<T> oldEntries, int oldLayoutId,
-                                      List<T> newEntries, int newLayoutId) {
-        if (oldEntries == newEntries && oldLayoutId == newLayoutId) {
+                                      List<T> oldEntries, int oldLayoutId, LongClickListener oldListener,
+                                      List<T> newEntries, int newLayoutId, LongClickListener newListener) {
+        if (oldEntries == newEntries && oldLayoutId == newLayoutId && oldListener == newListener) {
             return; // nothing has changed
         }
 
@@ -82,7 +82,7 @@ public class ListBindingAdapters {
             if (newEntries instanceof ObservableList) {
                 if (listener == null) {
                     listener =
-                            new EntryChangeListener(viewGroup, newLayoutId);
+                            new EntryChangeListener(viewGroup, newLayoutId, newListener);
                     ListenerUtil.trackListener(viewGroup, listener,
                             R.id.entryListener);
                 } else {
@@ -92,7 +92,7 @@ public class ListBindingAdapters {
                     ((ObservableList<T>) newEntries).addOnListChangedCallback(listener);
                 }
             }
-            resetViews(viewGroup, newLayoutId, newEntries);
+            resetViews(viewGroup, newLayoutId, newEntries, newListener);
         }
     }
 
@@ -108,9 +108,12 @@ public class ListBindingAdapters {
      * set as the {@code data} variable.
      */
     private static ViewDataBinding bindLayout(LayoutInflater inflater,
-                                              ViewGroup parent, int layoutId, Object entry) {
+                                              ViewGroup parent, int layoutId, Object entry, LongClickListener longClickListener) {
         ViewDataBinding binding = DataBindingUtil.inflate(inflater,
                 layoutId, parent, false);
+        if (!binding.setVariable(BR.longClickListener, longClickListener)) {
+            Log.w(TAG, "There is no variable 'recallHandler'");
+        }
         if (!binding.setVariable(BR.messageBean, entry)) {
             String layoutName = parent.getResources().getResourceEntryName(layoutId);
             Log.w(TAG, "There is no variable 'data' in layout " + layoutName);
@@ -129,7 +132,7 @@ public class ListBindingAdapters {
      *                 item will be bound to a different child View.
      */
     private static void resetViews(ViewGroup parent, int layoutId,
-                                   List entries) {
+                                   List entries, LongClickListener longClickListener) {
         parent.removeAllViews();
         if (layoutId == 0) {
             return;
@@ -139,7 +142,7 @@ public class ListBindingAdapters {
         for (int i = 0; i < entries.size(); i++) {
             Object entry = entries.get(i);
             ViewDataBinding binding = bindLayout(inflater, parent,
-                    layoutId, entry);
+                    layoutId, entry, longClickListener);
             parent.addView(binding.getRoot());
         }
     }
@@ -152,11 +155,13 @@ public class ListBindingAdapters {
         private final ViewGroup mTarget;
         private int mLayoutId;
         LayoutInflater inflater;
+        LongClickListener longClickListener;
 
-        EntryChangeListener(ViewGroup mTarget, int mLayoutId) {
+        EntryChangeListener(ViewGroup mTarget, int mLayoutId, LongClickListener longClickListener) {
             this.mTarget = mTarget;
             this.mLayoutId = mLayoutId;
             this.inflater = (LayoutInflater) mTarget.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            this.longClickListener = longClickListener;
         }
 
         void setLayoutId(int layoutId) {
@@ -165,7 +170,7 @@ public class ListBindingAdapters {
 
         @Override
         public void onChanged(ObservableList observableList) {
-            resetViews(mTarget, mLayoutId, observableList);
+            resetViews(mTarget, mLayoutId, observableList, longClickListener);
         }
 
         @Override
@@ -179,8 +184,7 @@ public class ListBindingAdapters {
             for (int i = start; i < end; i++) {
                 Object data = observableList.get(i);
                 ViewDataBinding binding = bindLayout(inflater,
-                        mTarget, mLayoutId, data);
-                binding.setVariable(BR.messageBean, observableList.get(i));
+                        mTarget, mLayoutId, data, longClickListener);
                 mTarget.removeViewAt(i);
                 mTarget.addView(binding.getRoot(), i);
             }
@@ -195,7 +199,7 @@ public class ListBindingAdapters {
             final int end = start + count;
             for (int i = end - 1; i >= start; i--) {
                 Object entry = observableList.get(i);
-                ViewDataBinding binding = bindLayout(inflater, mTarget, mLayoutId, entry);
+                ViewDataBinding binding = bindLayout(inflater, mTarget, mLayoutId, entry, longClickListener);
                 mTarget.addView(binding.getRoot(), start);
             }
         }
