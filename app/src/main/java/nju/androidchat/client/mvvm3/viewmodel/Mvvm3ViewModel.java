@@ -47,7 +47,6 @@ public class Mvvm3ViewModel extends BaseObservable implements MessageListener {
 
     public Mvvm3ViewModel(UiOperator uiOperator) {
         this.uiOperator = uiOperator;
-
         messageToSend = "";
         messageObservableList = new ObservableArrayList<>();
         client = SocketClient.getClient();
