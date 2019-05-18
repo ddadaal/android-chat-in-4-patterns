@@ -8,7 +8,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -24,8 +26,8 @@ import nju.androidchat.client.component.ItemTextSend;
 import nju.androidchat.client.component.OnRecallMessageRequested;
 
 @Log
-public class Mvp2TalkActivity extends AppCompatActivity implements Mvp2Contract.View, TextView.OnEditorActionListener, OnRecallMessageRequested {
-    private Mvp2Contract.Presenter presenter;
+public class Mvp2TalkActivity extends AppCompatActivity implements Mvp2Contract.TalkView, TextView.OnEditorActionListener, OnRecallMessageRequested {
+    private Mvp2Contract.TalkPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,7 @@ public class Mvp2TalkActivity extends AppCompatActivity implements Mvp2Contract.
     }
 
     @Override
-    public void setPresenter(Mvp2Contract.Presenter presenter) {
+    public void setPresenter(Mvp2Contract.TalkPresenter presenter) {
         this.presenter = presenter;
     }
 
@@ -109,9 +111,10 @@ public class Mvp2TalkActivity extends AppCompatActivity implements Mvp2Contract.
         sendText();
     }
 
-    // 当用户长按消息，并选择撤回消息时做什么，MVP-0不实现
+    // 当用户长按消息，并选择撤回消息时做什么
     @Override
     public void onRecallMessageRequested(UUID messageId) {
-
+        this.presenter.recallMessage(messageId);
     }
+
 }

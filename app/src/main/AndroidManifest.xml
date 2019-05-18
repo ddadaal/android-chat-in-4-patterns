@@ -30,6 +30,7 @@
         <activity android:name=".mvc1.Mvc1BackupActivity" />
         <activity android:name=".mvp1.Mvp1TalkActivity" />
         <activity android:name=".mvp1.Mvp1BackupActivity" />
+        <activity android:name=".mvp2.Mvp2TalkActivity" />
         <activity android:name=".mvvm2.Mvvm2TalkActivity" />
         <activity android:name=".mvvm3.Mvvm3TalkActivity" />
 

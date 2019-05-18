@@ -1,5 +1,7 @@
 package nju.androidchat.client.mvp2;
 
+import android.os.AsyncTask;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -12,15 +14,16 @@ import nju.androidchat.shared.message.ClientSendMessage;
 import nju.androidchat.shared.message.ErrorMessage;
 import nju.androidchat.shared.message.Message;
 import nju.androidchat.shared.message.RecallMessage;
+import nju.androidchat.shared.message.RecallRequestMessage;
 import nju.androidchat.shared.message.ServerSendMessage;
 
 @Log
-public class Mvp2TalkModel implements MessageListener, Mvp2Contract.Model {
+public class Mvp2TalkModel implements MessageListener, Mvp2Contract.TalkModel {
 
     private SocketClient client;
 
     @Setter
-    private Mvp2Contract.Presenter iMvp0TalkPresenter;
+    private Mvp2Contract.TalkPresenter iMvp0TalkPresenter;
 
     public Mvp2TalkModel() {
         this.client = SocketClient.getClient();
@@ -32,6 +35,12 @@ public class Mvp2TalkModel implements MessageListener, Mvp2Contract.Model {
     @Override
     public String getUsername() {
         return client.getUsername();
+    }
+
+    @Override
+    public void recallMessage(UUID messageId) {
+        RecallRequestMessage recallRequestMessage = new RecallRequestMessage(messageId);
+        AsyncTask.execute(() -> client.writeToServer(recallRequestMessage));
     }
 
     @Override
@@ -60,6 +69,7 @@ public class Mvp2TalkModel implements MessageListener, Mvp2Contract.Model {
             log.severe("Server error: " + ((ErrorMessage) message).getErrorMessage());
         } else if (message instanceof RecallMessage) {
             // 接受到服务器的撤回消息，MVC-0不实现
+            iMvp0TalkPresenter.recallMessage(((RecallMessage) message).getMessageId());
         } else {
             // 不认识的消息
             log.severe("Unsupported message received: " + message.toString());
