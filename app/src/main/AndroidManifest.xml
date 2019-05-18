@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="nju.androidchat.client">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
@@ -21,12 +22,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".mvc0.Mvc0TalkActivity"/>
-        <activity android:name=".frp0.Frp0TalkActivity"/>
+        <activity android:name=".mvc0.Mvc0TalkActivity" />
+        <activity android:name=".frp0.Frp0TalkActivity" />
         <activity android:name=".mvvm0.Mvvm0TalkActivity" />
         <activity android:name=".mvp0.Mvp0TalkActivity" />
-        <activity android:name=".mvc1.Mvc1TalkActivity"/>
-        <activity android:name=".mvc1.Mvc1BackupActivity"/>
+        <activity android:name=".mvc1.Mvc1TalkActivity" />
+        <activity android:name=".mvc1.Mvc1BackupActivity" />
+        <activity android:name=".mvp1.Mvp1TalkActivity" />
+        <activity android:name=".mvp1.Mvp1BackupActivity" />
         <activity android:name=".mvvm2.Mvvm2TalkActivity" />
         <activity android:name=".mvvm3.Mvvm3TalkActivity" />
 
