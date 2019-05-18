@@ -3,6 +3,7 @@ package nju.androidchat.client.mvp0;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import nju.androidchat.client.ClientMessage;
 
 @AllArgsConstructor
@@ -11,6 +12,7 @@ public class Mvp0TalkPresenter implements Mvp0Contract.Presenter {
     private Mvp0Contract.Model mvp0TalkModel;
     private Mvp0Contract.View iMvp0TalkView;
 
+    @Getter
     private List<ClientMessage> clientMessages;
 
     @Override
