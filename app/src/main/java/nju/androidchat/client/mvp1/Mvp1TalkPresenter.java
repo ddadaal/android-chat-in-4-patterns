@@ -1,18 +1,16 @@
-package nju.androidchat.client.mvp0;
+package nju.androidchat.client.mvp1;
 
 import java.util.List;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import nju.androidchat.client.ClientMessage;
 
 @AllArgsConstructor
-public class Mvp0TalkPresenter implements Mvp0Contract.Presenter {
+public class Mvp1TalkPresenter implements Mvp1Contract.TalkPresenter {
 
-    private Mvp0Contract.Model mvp0TalkModel;
-    private Mvp0Contract.View iMvp0TalkView;
+    private Mvp1Contract.TalkModel mvp0TalkModel;
+    private Mvp1Contract.TalkView iMvp0TalkView;
 
-    @Getter
     private List<ClientMessage> clientMessages;
 
     @Override
@@ -36,7 +34,7 @@ public class Mvp0TalkPresenter implements Mvp0Contract.Presenter {
         iMvp0TalkView.showMessageList(clientMessages);
     }
 
-    //撤回消息，Mvp0暂不实现
+    //撤回消息，Mvp1暂不实现
     @Override
     public void recallMessage(int index0) {
 

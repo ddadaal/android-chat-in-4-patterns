@@ -13,7 +13,6 @@ import nju.androidchat.client.R;
 
 public class Mvc1BackupActivity extends AppCompatActivity implements Mvc1BackupModel.UpdatedListener {
 
-
     private Mvc1BackupController controller;
     private Mvc1BackupModel model;
     private TextView txLastUpdated;

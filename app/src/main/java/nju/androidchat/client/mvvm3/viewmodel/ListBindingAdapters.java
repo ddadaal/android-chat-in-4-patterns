@@ -103,8 +103,8 @@ public class ListBindingAdapters {
      * @param inflater The LayoutInflater
      * @param parent   The ViewGroup containing the list of Views
      * @param layoutId The layout ID to use for the list item
-     * @param entry    The data to bind to the inflated View
-     * @return A ViewDataBinding, bound to a newly-inflated View with {@code entry}
+     * @param entry    The data to bind to the inflated TalkView
+     * @return A ViewDataBinding, bound to a newly-inflated TalkView with {@code entry}
      * set as the {@code data} variable.
      */
     private static ViewDataBinding bindLayout(LayoutInflater inflater,
@@ -119,14 +119,14 @@ public class ListBindingAdapters {
     }
 
     /**
-     * Clears all Views in {@code parent} and fills it with a View for
+     * Clears all Views in {@code parent} and fills it with a TalkView for
      * each item in {@code entries}, bound to the item. If layoutId
      * is 0, no Views will be added.
      *
      * @param parent   The ViewGroup to contain the list of items.
      * @param layoutId The layout ID to inflate for the child Views.
      * @param entries  The list of items to bind to the inflated Views. Each
-     *                 item will be bound to a different child View.
+     *                 item will be bound to a different child TalkView.
      */
     private static void resetViews(ViewGroup parent, int layoutId,
                                    List entries) {
