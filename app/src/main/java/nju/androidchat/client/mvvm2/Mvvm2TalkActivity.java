@@ -18,6 +18,7 @@ import nju.androidchat.client.BR;
 import nju.androidchat.client.R;
 import nju.androidchat.client.Utils;
 import nju.androidchat.client.mvvm2.model.ClientMessageObservable;
+import nju.androidchat.client.mvvm2.model.Direction;
 import nju.androidchat.client.mvvm2.viewmodel.RecallHandler;
 import nju.androidchat.client.mvvm2.viewmodel.Mvvm2ViewModel;
 import nju.androidchat.client.mvvm2.viewmodel.UiOperator;
@@ -84,7 +85,7 @@ public class Mvvm2TalkActivity extends AppCompatActivity implements TextView.OnE
 
     @Override
     public void showRecallUi(ClientMessageObservable messageObservable, RecallHandler recallHandler) {
-        if(messageObservable.isSend()) {
+        if (messageObservable.getDirection().equals(Direction.SEND)) {
             //    通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             //    设置Title的图标
@@ -102,7 +103,7 @@ public class Mvvm2TalkActivity extends AppCompatActivity implements TextView.OnE
             builder.setNegativeButton(getString(R.string.recall_message_cancel), (dialog, which) -> Toast.makeText(this, getString(R.string.after_recall_cancel), Toast.LENGTH_SHORT).show());
             //    显示出该对话框
             builder.show();
-        }else {
+        } else {
             Toast.makeText(this, getString(R.string.can_not_recall), Toast.LENGTH_SHORT).show();
         }
     }

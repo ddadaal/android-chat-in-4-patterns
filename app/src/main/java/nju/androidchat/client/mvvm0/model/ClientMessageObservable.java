@@ -49,14 +49,6 @@ public class ClientMessageObservable extends BaseObservable {
         notifyPropertyChanged(BR.state);
     }
 
-    public boolean isSend() {
-        return direction.equals(Direction.SEND);
-    }
-
-    public boolean isWithdrawn() {
-        return state.equals(State.WITHDRAWN);
-    }
-
     public ClientMessageObservable(ClientSendMessage clientSendMessage, String username) {
         direction = Direction.SEND;
         messageId = clientSendMessage.getMessageId();

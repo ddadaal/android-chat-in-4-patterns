@@ -47,14 +47,7 @@ public class ClientMessageObservable extends BaseObservable {
 
     public void setState(State state) {
         this.state = state;
-        if (state.equals(State.WITHDRAWN)) {
-            setMessage(Utils.withDrawnMessage);
-        }
         notifyPropertyChanged(BR.state);
-    }
-
-    public boolean isSend() {
-        return direction.equals(Direction.SEND);
     }
 
     public ClientMessageObservable(ClientSendMessage clientSendMessage, String username) {

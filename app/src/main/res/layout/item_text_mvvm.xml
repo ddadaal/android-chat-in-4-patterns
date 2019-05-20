@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <import type="nju.androidchat.client.mvvm0.model.Direction" />
         <variable
             name="messageBean"
             type="nju.androidchat.client.mvvm0.model.ClientMessageObservable" />
@@ -53,7 +53,7 @@
                     android:id="@+id/chat_item_content_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@{messageBean.send?@drawable/message_text_send:@drawable/message_text_receive}"
+                    android:background="@{messageBean.direction.equals(Direction.SEND)?@drawable/message_text_send:@drawable/message_text_receive}"
                     android:text="@{messageBean.message}"
                     android:textColor="#333333"
                     android:textSize="14sp" />
