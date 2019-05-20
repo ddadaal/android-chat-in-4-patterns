@@ -9,7 +9,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import nju.androidchat.client.R;
 import nju.androidchat.client.mvvm0.model.Direction;
 
-public class CustomizedAdapters {
+public class ItemTextAdapters {
     @BindingAdapter({"message_type"})
     public static void setLayout(CircleImageView circleImageView, Direction direction) {
         if (direction.equals(Direction.SEND)) {

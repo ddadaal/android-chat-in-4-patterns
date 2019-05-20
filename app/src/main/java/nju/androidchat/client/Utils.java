@@ -20,7 +20,6 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 @Log
 @UtilityClass
 public class Utils {
-    public String withDrawnMessage = "（已撤回）";
     Properties props = new Properties();
     String CHAT_ACTIVITY_KEY = "chat_activity";
     Class<?> CHAT_ACTIVITY = Mvvm0TalkActivity.class;
