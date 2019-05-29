@@ -28,7 +28,7 @@
                 android:layout_height="0dp"
                 android:orientation="vertical"
                 app:entries="@{viewModel.messageObservableList}"
-                app:layout="@{viewModel.layout}"
+                app:layout="@{@layout/item_text_mvvm3}"
                 >
             </LinearLayout>
         </ScrollView>

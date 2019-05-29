@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.ObservableArrayList;
-import androidx.databinding.ObservableInt;
 import androidx.databinding.ObservableList;
 
 import java.time.LocalDateTime;
@@ -36,8 +35,6 @@ public class Mvvm2ViewModel extends BaseObservable implements MessageListener, R
     private ObservableList<ClientMessageObservable> messageObservableList;
     @Getter
     private SocketClient client;
-    @Getter
-    private ObservableInt layout = new ObservableInt(R.layout.item_text_mvvm2);
 
     private UiOperator uiOperator;
 

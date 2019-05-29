@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.ObservableArrayList;
-import androidx.databinding.ObservableInt;
 import androidx.databinding.ObservableList;
 
 import java.time.LocalDateTime;
@@ -14,7 +13,6 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.extern.java.Log;
 import nju.androidchat.client.BR;
-import nju.androidchat.client.R;
 import nju.androidchat.client.mvvm0.model.ClientMessageObservable;
 import nju.androidchat.client.socket.MessageListener;
 import nju.androidchat.client.socket.SocketClient;
@@ -34,8 +32,6 @@ public class Mvvm0ViewModel extends BaseObservable implements MessageListener {
     private ObservableList<ClientMessageObservable> messageObservableList;
     @Getter
     private SocketClient client;
-    @Getter
-    private ObservableInt layout = new ObservableInt(R.layout.item_text_mvvm);
 
     private UiOperator uiOperator;
 
