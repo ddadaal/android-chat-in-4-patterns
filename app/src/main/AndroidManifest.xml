@@ -24,6 +24,8 @@
         </activity>
         <activity android:name=".mvc0.Mvc0TalkActivity" />
         <activity android:name=".frp0.Frp0TalkActivity" />
+        <activity android:name=".frp3.Frp3TalkActivity"/>
+        <activity android:name=".frp4.Frp4TalkActivity" />
         <activity android:name=".mvvm0.Mvvm0TalkActivity" />
         <activity android:name=".mvp0.Mvp0TalkActivity" />
         <activity android:name=".mvc1.Mvc1TalkActivity" />
