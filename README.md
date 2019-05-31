@@ -2,6 +2,12 @@
 
 用4种客户端架构（MVC、MVP、MVVM、FRP）分别实现局域网群聊的Android应用。
 
+# PPT
+
+PPT可以在[这里](https://github.com/viccrubs/Slides/tree/master/20190529-%E7%A7%BB%E5%8A%A8%E4%BA%92%E8%81%94%E7%BD%91%20%E4%BD%BF%E7%94%A8MVC%E3%80%81MVP%E3%80%81MVVM%E5%92%8CFRP%E5%AE%9E%E7%8E%B0Android%E5%B1%80%E5%9F%9F%E7%BD%91%E7%BE%A4%E8%81%8A%E5%BA%94%E7%94%A8)下载到。
+
+可以访问[陈俊达的博客的PPT资源界面](https://viccrubs.me/resources/slides)或者[他专门放PPT的Repo](https://github.com/viccrubs/Slides)以查找到他的更多PPT。
+
 # 运行
 
 首先启动Server项目，然后使用多个模拟器/真机启动Client项目，输入用户名，即可开始聊天。
