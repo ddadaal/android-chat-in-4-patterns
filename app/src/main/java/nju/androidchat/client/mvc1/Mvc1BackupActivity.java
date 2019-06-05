@@ -23,18 +23,19 @@ public class Mvc1BackupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.backup);
 
+        model = new Mvc1BackupModel();
         controller = new Mvc1BackupController(model);
 
         TextView txLastUpdated = findViewById(R.id.last_updated_lb);
 
         Button btnBackup = findViewById(R.id.backup_btn);
 
-        model = new Mvc1BackupModel();
 
         // 订阅备份开始事件
         model.setBackupStartListener(() -> {
             runOnUiThread(() -> {
                 btnBackup.setText("正在备份");
+                btnBackup.setEnabled(false);
             });
         });
 
@@ -48,6 +49,7 @@ public class Mvc1BackupActivity extends AppCompatActivity {
                     txLastUpdated.setText(model.getLastUpdated().toString());
                 }
                 btnBackup.setText("备份");
+                btnBackup.setEnabled(true);
             });
         });
 

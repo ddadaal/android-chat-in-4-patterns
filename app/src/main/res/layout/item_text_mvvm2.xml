@@ -66,8 +66,6 @@
                     android:text="@{messageBean.state.equals(State.WITHDRAWN)?@string/recall_message:messageBean.message}"
                     android:textColor="#333333"
                     android:textSize="14sp" />
-
-
             </LinearLayout>
 
 
