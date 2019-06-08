@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import lombok.extern.java.Log;
-import nju.androidchat.client.frp0.Frp0TalkActivity;
 import nju.androidchat.client.socket.SocketClient;
 import nju.androidchat.shared.Shared;
 
@@ -24,6 +23,7 @@ import java.util.Objects;
 @Log
 public class MainActivity extends AppCompatActivity {
 
+    EditText inputIp;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -45,24 +45,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_main);
 
-        EditText editText1 = findViewById(R.id.ip_input);
+        inputIp = findViewById(R.id.ip_input);
 
-        editText1.setText(SocketClient.SERVER_ADDRESS + ":" + Shared.SERVER_PORT);
+
+        inputIp.setText(SocketClient.SERVER_ADDRESS + ":" + Shared.SERVER_PORT);
     }
 
     public void onBtnConnectClicked(View view) {
         Handler handler = new Handler();
-        EditText editText1 = findViewById(R.id.ip_input);
         EditText editText2 = findViewById(R.id.username_input);
 
-        String ip = editText1.getText().toString();
+        String ip = inputIp.getText().toString();
         String username = editText2.getText().toString();
 
         if (!(ip.equals("") || username.equals(""))) {
 
 
             AsyncTask.execute(() -> {
-                String result = SocketClient.connect(username);
+                String result = SocketClient.connect(username, ip);
                 if (result.equals("SUCCESS")) {
                     handler.post(() -> {
                         Toast.makeText(this, "登录成功！", Toast.LENGTH_SHORT).show();

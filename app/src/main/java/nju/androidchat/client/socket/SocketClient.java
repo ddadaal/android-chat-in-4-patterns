@@ -63,13 +63,15 @@ public class SocketClient implements Closeable, Runnable {
     }
 
     @SneakyThrows
-    public static String connect(String username) {
+    public static String connect(String username, String target) {
+
+        String[] splitted = target.split(":");
 
         try {
             if (client != null) {
                 client.close();
             }
-            Socket socket = new Socket(SERVER_ADDRESS, Shared.SERVER_PORT);
+            Socket socket = new Socket(splitted[0], Integer.parseInt(splitted[1]));
             SocketClient client = new SocketClient(username, socket);
             log.info("Socket connection established.");
 
@@ -96,6 +98,12 @@ public class SocketClient implements Closeable, Runnable {
             return e.toString();
         }
         return "";
+    }
+
+    @SneakyThrows
+    public static String connect(String username) {
+
+        return connect(username, SocketClient.SERVER_ADDRESS + ":" + Shared.SERVER_PORT);
     }
 
 
