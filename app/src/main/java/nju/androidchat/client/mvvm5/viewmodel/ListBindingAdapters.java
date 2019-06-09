@@ -297,6 +297,6 @@ public class ListBindingAdapters {
     private static boolean isTotallyVisible(View view) {
         Rect rect = new Rect();
         view.getLocalVisibleRect(rect);
-        return rect.top==0;
+        return rect.top==0 && rect.bottom == view.getHeight();
     }
 }
