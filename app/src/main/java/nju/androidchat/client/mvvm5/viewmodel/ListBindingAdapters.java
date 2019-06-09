@@ -27,7 +27,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ObservableList;
 import androidx.databinding.ViewDataBinding;
 import androidx.databinding.adapters.ListenerUtil;
-import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
@@ -157,7 +156,7 @@ public class ListBindingAdapters {
             View target = binding.getRoot();
             parent.addView(target);
             target.post(() -> {
-                if (target.getLocalVisibleRect(new Rect())) {
+                if (isTotallyVisible(target)) {
                     log.info("in screen");
                     clientMessageObservable.setRead(true);
                 } else {
@@ -175,7 +174,7 @@ public class ListBindingAdapters {
                 View target = parent.getChildAt(i);
                 ClientMessageObservable clientMessageObservable = (ClientMessageObservable) entries.get(i);
                 target.post(() -> {
-                    if (target.getLocalVisibleRect(new Rect()) && !clientMessageObservable.isRead()) {
+                    if (isTotallyVisible(target) && !clientMessageObservable.isRead()) {
                         log.info("scroll and in screen");
                         clientMessageObservable.setRead(true);
                         counter.setMessageToReadNum(counter.getMessageToReadNum() - 1);
@@ -229,7 +228,7 @@ public class ListBindingAdapters {
                 View target = binding.getRoot();
                 mTarget.addView(target, i);
                 target.post(() -> {
-                    if (target.getLocalVisibleRect(new Rect())) {
+                    if (isTotallyVisible(target)) {
                         log.info("in screen");
                         clientMessageObservable.setRead(true);
                     } else {
@@ -256,7 +255,7 @@ public class ListBindingAdapters {
                 View target = binding.getRoot();
                 mTarget.addView(target, start);
                 target.post(() -> {
-                    if (target.getLocalVisibleRect(new Rect())) {
+                    if (isTotallyVisible(target)) {
                         log.info("in screen");
                         clientMessageObservable.setRead(true);
                     } else {
@@ -293,5 +292,11 @@ public class ListBindingAdapters {
                 mTarget.removeViewAt(start);
             }
         }
+    }
+
+    private static boolean isTotallyVisible(View view) {
+        Rect rect = new Rect();
+        view.getLocalVisibleRect(rect);
+        return rect.top==0;
     }
 }
