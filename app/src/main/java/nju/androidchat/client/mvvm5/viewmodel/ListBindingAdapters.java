@@ -175,7 +175,7 @@ public class ListBindingAdapters {
                 View target = parent.getChildAt(i);
                 ClientMessageObservable clientMessageObservable = (ClientMessageObservable) entries.get(i);
                 target.post(() -> {
-                    if (!target.getLocalVisibleRect(new Rect()) && !clientMessageObservable.isRead()) {
+                    if (target.getLocalVisibleRect(new Rect()) && !clientMessageObservable.isRead()) {
                         log.info("scroll and in screen");
                         clientMessageObservable.setRead(true);
                         counter.setMessageToReadNum(counter.getMessageToReadNum() - 1);
