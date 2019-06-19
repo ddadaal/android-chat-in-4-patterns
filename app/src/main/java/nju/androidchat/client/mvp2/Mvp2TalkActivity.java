@@ -21,6 +21,8 @@ import lombok.extern.java.Log;
 import nju.androidchat.client.ClientMessage;
 import nju.androidchat.client.R;
 import nju.androidchat.client.Utils;
+import nju.androidchat.client.component.ItemImgReceive;
+import nju.androidchat.client.component.ItemImgSend;
 import nju.androidchat.client.component.ItemTextReceive;
 import nju.androidchat.client.component.ItemTextSend;
 import nju.androidchat.client.component.OnRecallMessageRequested;
@@ -28,6 +30,7 @@ import nju.androidchat.client.component.OnRecallMessageRequested;
 @Log
 public class Mvp2TalkActivity extends AppCompatActivity implements Mvp2Contract.TalkView, TextView.OnEditorActionListener, OnRecallMessageRequested {
     private Mvp2Contract.TalkPresenter presenter;
+    private final static String pattern = "!\\[.*?\\]\\(.*?\\)";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +62,26 @@ public class Mvp2TalkActivity extends AppCompatActivity implements Mvp2Contract.
                     for (ClientMessage message : messages) {
                         String text = String.format("%s", message.getMessage());
                         // 如果是自己发的，增加ItemTextSend
-                        if (message.getSenderUsername().equals(this.presenter.getUsername())) {
-                            content.addView(new ItemTextSend(this, text, message.getMessageId(), this));
+                        text = text.trim();
+                        if (text.matches(pattern)) {
+                            String imgURL = text.substring(text.indexOf('(') + 1, text.length() - 1);
+                            if (message.getSenderUsername().equals(this.presenter.getUsername())) {
+                                content.addView(new ItemImgSend(this, imgURL, message.getMessageId(), this));
+//                              content.addView(new ItemImgSend(this,"http://news.sciencenet.cn/upload/news/images/2011/3/20113301123128272.jpg",message.getMessageId(),this));
+
+                            } else {
+                                content.addView(new ItemImgReceive(this, imgURL, message.getMessageId()));
+                            }
                         } else {
-                            content.addView(new ItemTextReceive(this, text, message.getMessageId()));
+                            if (message.getSenderUsername().equals(this.presenter.getUsername())) {
+                                content.addView(new ItemTextSend(this, text, message.getMessageId(), this));
+
+                            } else {
+                                content.addView(new ItemTextReceive(this, text, message.getMessageId()));
+
+                            }
                         }
+
                     }
 
                     Utils.scrollListToBottom(this);
@@ -104,6 +122,7 @@ public class Mvp2TalkActivity extends AppCompatActivity implements Mvp2Contract.
         AsyncTask.execute(() -> {
             this.presenter.sendMessage(text.getText().toString());
         });
+        text.setText("");
     }
 
     public void onBtnSendClicked(View v) {
