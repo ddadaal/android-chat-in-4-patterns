@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,6 +25,7 @@ import java.net.URLConnection;
 import java.util.UUID;
 
 import lombok.Setter;
+import nju.androidchat.client.MainActivity;
 import nju.androidchat.client.R;
 
 public class ItemTextSend extends LinearLayout implements View.OnLongClickListener {
@@ -75,7 +78,18 @@ public class ItemTextSend extends LinearLayout implements View.OnLongClickListen
     }
 
     public void setImageView(String imageURL) {
-        imageView.setImageBitmap(getBitmapFromURL(imageURL));
+        new Thread(){
+            public void run(){
+                Bitmap bitmap = getBitmapFromURL(imageURL);
+                Handler mainHandler = new Handler(Looper.getMainLooper());
+                mainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        imageView.setImageBitmap(bitmap);
+                    }
+                });
+            }
+        }.start();
     }
 
     @Override
