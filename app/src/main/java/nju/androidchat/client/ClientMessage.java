@@ -22,10 +22,22 @@ public class ClientMessage extends Message {
     @Getter
     private String message;
 
+    @Getter
+    private boolean isImage;
+
     public ClientMessage(ServerSendMessage message) {
         this.messageId = message.getMessageId();
         this.time = message.getTime();
         this.senderUsername = message.getSenderUsername();
         this.message = message.getMessage();
+        this.isImage = message.isImage();
+    }
+
+    public ClientMessage(UUID uuid, LocalDateTime time, String senderUsername, String message) {
+        this.messageId = uuid;
+        this.time = time;
+        this.senderUsername = senderUsername;
+        this.message = message;
+        this.isImage = false;
     }
 }

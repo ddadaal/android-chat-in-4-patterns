@@ -42,7 +42,7 @@ public class Mvp2TalkPresenter implements Mvp2Contract.TalkPresenter {
         List<ClientMessage> newMessages = new ArrayList<>();
         for (ClientMessage clientMessage : clientMessages) {
             if (clientMessage.getMessageId().equals(messageId)) {
-                newMessages.add(new ClientMessage(clientMessage.getMessageId(), clientMessage.getTime(), clientMessage.getSenderUsername(), "(已撤回)"));
+                newMessages.add(new ClientMessage(clientMessage.getMessageId(), clientMessage.getTime(), clientMessage.getSenderUsername(), "(已撤回)", false));
             } else {
                 newMessages.add(clientMessage);
             }

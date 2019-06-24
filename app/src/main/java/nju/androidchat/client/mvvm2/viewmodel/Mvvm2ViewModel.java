@@ -9,6 +9,8 @@ import androidx.databinding.ObservableList;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import lombok.Getter;
 import lombok.extern.java.Log;
@@ -94,6 +96,21 @@ public class Mvvm2ViewModel extends BaseObservable implements MessageListener, R
             // 接受到其他设备发来的消息
             // 增加到自己的消息列表里，并通知UI修改
             ServerSendMessage serverSendMessage = (ServerSendMessage) message;
+
+            String pattern = "!\\[.*\\]\\(.*\\)";
+            Pattern r = Pattern.compile(pattern);
+            Matcher m = r.matcher(serverSendMessage.getMessage());
+            if (m.find()) {
+                String imageString = m.group(0);
+                String pattern2 = "\\(.*\\)";
+                Pattern r2 = Pattern.compile(pattern2);
+                Matcher m2 = r2.matcher(imageString);
+                if (m2.find()) {
+                    String imageURL = m2.group(0);
+                    imageURL = imageURL.substring(1, imageURL.length() - 1);
+                }
+            }
+
             log.info(String.format("%s sent a messageToSend: %s",
                     serverSendMessage.getSenderUsername(),
                     serverSendMessage.getMessage()

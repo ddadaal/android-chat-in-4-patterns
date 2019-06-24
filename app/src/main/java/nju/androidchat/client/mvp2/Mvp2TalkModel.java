@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import lombok.Setter;
 import lombok.extern.java.Log;
@@ -48,10 +50,40 @@ public class Mvp2TalkModel implements MessageListener, Mvp2Contract.TalkModel {
         //处理事件
         LocalDateTime now = LocalDateTime.now();
         UUID uuid = UUID.randomUUID();
-        ClientMessage clientMessage = new ClientMessage(uuid, now, getUsername(), message);
+
+        String imageURL = getImageURL(message);
+
+        System.out.println("!imageURL: " + imageURL);
+
+        ClientMessage clientMessage = null;
+        if (imageURL.equals("")) {
+            clientMessage = new ClientMessage(uuid, now, getUsername(), message, false);
+        } else {
+            clientMessage = new ClientMessage(uuid, now, getUsername(), imageURL, true);
+        }
+
+
         // 阻塞地把信息发送到服务器
         client.writeToServer(new ClientSendMessage(uuid, now, message));
         return clientMessage;
+    }
+
+    public static String getImageURL(String message) {
+        String pattern = "!\\[.*\\]\\(.*\\)";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(message);
+        if (m.find()) {
+            String imageString = m.group(0);
+            String pattern2 = "\\(.*\\)";
+            Pattern r2 = Pattern.compile(pattern2);
+            Matcher m2 = r2.matcher(imageString);
+            if (m2.find()) {
+                String imageURL = m2.group(0);
+                imageURL = imageURL.substring(1, imageURL.length() - 1);
+                return imageURL;
+            }
+        }
+        return "";
     }
 
     @Override
@@ -63,7 +95,13 @@ public class Mvp2TalkModel implements MessageListener, Mvp2Contract.TalkModel {
                     serverSendMessage.getSenderUsername(),
                     serverSendMessage.getMessage()
             ));
-            iMvp0TalkPresenter.receiveMessage(new ClientMessage(serverSendMessage));
+            String imageURL = getImageURL(serverSendMessage.getMessage());
+            if (imageURL.equals("")) {
+                iMvp0TalkPresenter.receiveMessage(new ClientMessage(serverSendMessage));
+            } else {
+                iMvp0TalkPresenter.receiveMessage(new ClientMessage(serverSendMessage.getMessageId(), serverSendMessage.getTime(), serverSendMessage.getSenderUsername(), imageURL, true));
+            }
+
         } else if (message instanceof ErrorMessage) {
             // 接收到服务器的错误消息
             log.severe("Server error: " + ((ErrorMessage) message).getErrorMessage());
