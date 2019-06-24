@@ -39,6 +39,7 @@ public class Mvp2TalkPresenter implements Mvp2Contract.TalkPresenter {
     //撤回消息，Mvp0暂不实现
     @Override
     public void recallMessage(UUID messageId) {
+        // 操作界面
         List<ClientMessage> newMessages = new ArrayList<>();
         for (ClientMessage clientMessage : clientMessages) {
             if (clientMessage.getMessageId().equals(messageId)) {
@@ -48,8 +49,11 @@ public class Mvp2TalkPresenter implements Mvp2Contract.TalkPresenter {
             }
         }
         this.clientMessages = newMessages;
-        this.mvp2TalkModel.recallMessage(messageId);
         this.iMvp2TalkView.showMessageList(newMessages);
+
+        // 操作数据
+        this.mvp2TalkModel.recallMessage(messageId);
+
     }
 
     @Override

@@ -43,7 +43,6 @@
                     android:background="#00383636"
                     android:gravity="center_vertical"
                     android:hint="@string/ip_hint"
-                    android:enabled="false"
                     android:textSize="18sp"
                     />
             </LinearLayout>

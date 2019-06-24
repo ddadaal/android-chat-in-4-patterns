@@ -63,13 +63,13 @@ public class Mvvm2ViewModel extends BaseObservable implements MessageListener, R
 
     private void recallMessage(UUID uuid) {
         uiOperator.runOnUiThread(() -> {
-            for (int i = 0; i < messageObservableList.size(); i++) {
-                ClientMessageObservable clientMessageObservable = messageObservableList.get(i);
-                if (clientMessageObservable.getMessageId().equals(uuid)) {
-                    clientMessageObservable.setState(State.WITHDRAWN);
-                    break;
-                }
-            }
+            messageObservableList.stream()
+                    .filter(message -> message.getMessageId().equals(uuid))
+                    .findAny()
+                    .ifPresent(message -> {
+                        // 修改数据的状态即可
+                        message.setState(State.WITHDRAWN);
+                    });
         });
     }
 
